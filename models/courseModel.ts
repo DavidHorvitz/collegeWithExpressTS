@@ -1,11 +1,11 @@
 export interface courseModel {
     Id: string,//uuid
-    course_name: string,
-    starting_date: Date,
-    end_date: Date,
-    minimum_pass_score: number,
-    maximum_students: number,
-    is_ready: true
+    Course_name: string,
+    Starting_date: Date,
+    End_date: Date,
+    Minimum_pass_score: number,
+    Maximum_students: number,
+    Is_ready: true
 
 
 

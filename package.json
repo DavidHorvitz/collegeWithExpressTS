@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/DavidHorvitz/collegeWithExpressTS/issues"
   },
-  "homepage": "https://github.com/DavidHorvitz/collegeWithExpressTS#readme"
+  "homepage": "https://github.com/DavidHorvitz/collegeWithExpressTS#readme",
+  "dependencies": {
+    "@types/sequelize": "^4.28.14",
+    "dotenv": "^16.0.3",
+    "pg": "^8.9.0",
+    "sequelize": "^6.28.0"
+  }
 }
