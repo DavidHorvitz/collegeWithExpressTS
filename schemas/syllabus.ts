@@ -8,7 +8,7 @@ export interface SyllabusInterface {
 }
 
 export async function createTable(sequelize: Sequelize, Course: CourseInterface["Schema"]): Promise<SyllabusInterface> {
-    const SyllabusSchema = sequelize.define<SyllabusSchemaModel>('lecturer', {
+    const SyllabusSchema = sequelize.define<SyllabusSchemaModel>('syllabus', {
         Id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -27,6 +27,7 @@ export async function createTable(sequelize: Sequelize, Course: CourseInterface[
             allowNull: false,
         },
     } as any, {
+        schema:"college",
         createdAt: false,
     });
     Course.hasMany(SyllabusSchema, { foreignKey: 'Course_id' });

@@ -39,6 +39,7 @@ export async function createTable(sequelize: Sequelize, Course: CourseInterface[
         },
 
     } as any, {
+        schema:"college",
         createdAt: false,
     });
     Course.hasMany(ClassDatesSchema, { foreignKey: 'Course_id' });

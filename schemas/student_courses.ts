@@ -14,6 +14,7 @@ export async function createTable(sequelize: Sequelize, Student: StudentInterfac
     const Student_coursesSchema = sequelize.define<Student_coursesModelSchemaModel>('student_courses', {
 
     } as student_coursesModel,{
+        schema:"college",
         createdAt: false
 
     });

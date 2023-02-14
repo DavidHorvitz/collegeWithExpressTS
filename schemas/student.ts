@@ -28,6 +28,7 @@ export async function createTable(sequelize: Sequelize): Promise<StudentInterfac
         },
     },
         {
+            schema:"college",
             createdAt: false,
         });
 
