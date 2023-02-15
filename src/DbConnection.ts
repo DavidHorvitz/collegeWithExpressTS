@@ -1,4 +1,3 @@
-// import { createTable as createUserProduct } from './schema/userProduct';
 import { createTable as createClassDatesTable } from './schemas/classDates';
 import { createTable as createCourseTable } from './schemas/course';
 import { createTable as createLecturerTable } from './schemas/lecturer';
