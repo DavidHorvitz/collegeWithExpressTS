@@ -3,6 +3,8 @@ import { studentModel } from '../models/studentModel';
 type StudentSchemaModel = Model<studentModel>
 export interface StudentInterface {
     Schema: ModelStatic<StudentSchemaModel>
+    insert: (student: Omit<studentModel, "id">) => Promise<studentModel>
+    searchById: (id: string) => Promise<studentModel | undefined>
 
 }
 
@@ -34,7 +36,15 @@ export async function createTable(sequelize: Sequelize): Promise<StudentInterfac
 
     await StudentSchema.sync();
     return {
-        Schema: StudentSchema
+        Schema: StudentSchema,
+        async insert(student) {
+            const result = await StudentSchema.create(student as studentModel)
+            return result.toJSON();
+        },
+        async searchById(id: string) {
+            const result = await StudentSchema.findByPk(id)
+            return result?.toJSON();
+        }
 
     }
 
