@@ -1,24 +1,57 @@
+ 
 
- GET  http://localhost:8080/course/:courseId HTTP/1.1 
+
+
+GET http://localhost:8080/course/e0cf2c14-4516-495f-ba2e-ebad798a8d95 HTTP/1.1
  Content-Type: application/json
 Accept-Language: en-us
 
- {
-    "ID":"e0cf2c14-4516-495f-ba2e-ebad798a8d95"
- }
+
+
+#  {
+#       "Id":"e0cf2c14-4516-495f-ba2e-ebad798a8d95"
+#  }
+
+
+
+
+
+#  POST  http://localhost:8080/lecturer/ HTTP/1.1 
+#  {
+#    "Name":"David",
+#    "Phone_number":"0695847465",
+#    "Email":"david@ami.org.il"
+#  }
 
 
 
 
 
 
-# POST http://localhost:8080/course/course_name HTTP/1.1
+
+
+#  GET  http://localhost:8080/course/:courseId HTTP/1.1 
+
+   #  "ID":"e0cf2c14-4516-495f-ba2e-ebad798a8d95"
+
+
+
+
+
 # Content-Type: application/json
 # Accept-Language: en-us
 
 
 # {
 #    "Course_name" :"david",
-  
-
 # }
+
+# /* POST  http://localhost:8080/course HTTP/1.1 */
+// {
+//     "Course_name":"david",
+//     "Starting_date": "2015-",
+//     "End_date": "2015-",
+//     "Minimum_pass_score" :32,
+//     "Maximum_students": 23,
+//     "Is_ready":true
+// }

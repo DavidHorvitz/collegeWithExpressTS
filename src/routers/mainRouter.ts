@@ -2,6 +2,7 @@ import express from 'express';
 import { main as initDB } from '../index';
 import { createCourseRouter  } from './courseRouter';
 import { createStudentRoute} from './studentRouter';
+import { createLecturerRouter} from './lecturerRouter';
 
 export async function mainRouter() {
     const app = express()
@@ -10,6 +11,7 @@ export async function mainRouter() {
     app.use(express.json({ limit: "10kb" }))
     app.use("/course", createCourseRouter(db))
     app.use("/student", createStudentRoute(db))
+    app.use("/lecturer", createLecturerRouter(db))
     
     app.listen(8080, () => {
       console.log(`Example app listening on port 8088`)

@@ -2,7 +2,7 @@ import express, { Request, Response } from "express"
 import { DB } from "../index"
 
 export function createStudentRoute(db: DB) {
-    const studentRouter = express.Router({});
+    const studentRouter = express.Router();
 
     studentRouter.get('/:studentId', async (req, res) => {
         const student = await db.Student.searchById(req.params.studentId);
