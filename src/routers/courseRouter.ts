@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express"
 import { DB } from "../index";
+import { isUUID } from "../validate/validateUUID";
 
 export function createCourseRouter(db: DB) {
     const courseRouter = express.Router();
     //GET
     //find by ID (http://localhost:8080/course/e0cf2c14-4516-495f-ba2e-ebad798a8d95)
     courseRouter.get('/:courseId', async (req: Request, res: Response) => {
-
         const courseId = req.params.courseId;
         const course = await db.Course.searchById(courseId);
         console.log(course);
@@ -52,5 +52,34 @@ export function createCourseRouter(db: DB) {
         res.json(course);
         console.log(course);
     })
+
+    //DELETE
+    //Remove course by id 
+    // courseRouter.delete('/:courseId', async (req: Request, res: Response) => {
+    //     const courseId = req.params.courseId;
+    //     const course = await db.Course.deleteCourseById(courseId);
+    //     console.log(course);
+    //     if (course) {
+    //         res.status(200).json({ status: "deleted" })
+    //     } else {
+    //         res.status(404).json({ status: "not found" })
+    //     }
+    //     res.json(course);
+    // });
+    courseRouter.delete('/:courseId', async (req: Request, res: Response) => {
+        const courseId = req.params.courseId;
+
+        // check if courseId is a valid UUID
+        if (!isUUID(courseId)) {
+            return res.status(400).json({ error: 'Invalid courseId parameter' });
+        }
+
+        const course = await db.Course.deleteCourseById(courseId);
+        if (course) {
+            return res.status(200).json({ status: 'deleted' });
+        } else {
+            return res.status(404).json({ status: 'not found' });
+        }
+    });
     return courseRouter;
 }

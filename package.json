@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node src/index.ts",
-    "run-mainRouter":"ts-node src/routers/mainRouter.ts"
+    "run-mainRouter": "ts-node src/routers/mainRouter.ts"
   },
   "repository": {
     "type": "git",
@@ -23,10 +23,12 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "pg": "^8.9.0",
-    "sequelize": "^6.28.0"
+    "sequelize": "^6.28.0",
+    "uuid-validate": "^0.0.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
+    "@types/uuid-validate": "^0.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   }

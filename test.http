@@ -1,14 +1,14 @@
  
 
+DELETE http://localhost:8080/course/ab97367a-2739-4863-a4ea-4db6c264d72e HTTP/1.1 HTTP/1.1
 
-
-PUT http://localhost:8080/course?course_name=React HTTP/1.1
- Content-Type: application/json
-Accept-Language: en-us
-{
-   "Course_name":"React",
-   "Is_ready":false
-}
+# PUT http://localhost:8080/course?course_name=React HTTP/1.1
+#  Content-Type: application/json
+# Accept-Language: en-us
+# {
+#    "Course_name":"React",
+#    "Is_ready":false
+# }
 
 
 # GET http://localhost:8080/course/e0cf2c14-4516-495f-ba2e-ebad798a8d95 HTTP/1.1
@@ -52,12 +52,16 @@ Accept-Language: en-us
 #    "Course_name" :"david",
 # }
 
-# /* POST  http://localhost:8080/course HTTP/1.1 */
-// {
-//     "Course_name":"david",
-//     "Starting_date": "2015-",
-//     "End_date": "2015-",
-//     "Minimum_pass_score" :32,
-//     "Maximum_students": 23,
-//     "Is_ready":true
-// }
+#  POST  http://localhost:8080/course HTTP/1.1 
+# Content-Type: application/json
+# Accept-Language: en-us
+
+
+#  {
+#     "Course_name":"OOP",
+#     "Starting_date": "2022-",
+#     "End_date": "2015-",
+#     "Minimum_pass_score" :11,
+#      "Maximum_students": 23,
+#     "Is_ready":false
+#  }

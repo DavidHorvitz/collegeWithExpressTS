@@ -7,7 +7,7 @@ export interface CourseInterface {
     searchById: (id: string) => Promise<courseModel | undefined>
     searchByName: (course_name: string) => Promise<courseModel | undefined>
     updateCourseByName: (course_name: string, updates: Partial<courseModel>) => Promise<courseModel | undefined>
-
+    deleteCourseById: (id: string) => Promise<boolean>
 }
 
 export async function createTable(sequelize: Sequelize): Promise<CourseInterface> {
@@ -66,7 +66,7 @@ export async function createTable(sequelize: Sequelize): Promise<CourseInterface
         },
         async updateCourseByName(course_name: string, updates: Partial<courseModel>) {
             try {
-                let [rowsAffected, [updatedCourse]] = await CourseSchema.update(updates, {
+                const [rowsAffected, [updatedCourse]] = await CourseSchema.update(updates, {
                     where: {
                         Course_name: course_name,
                     },
@@ -82,6 +82,12 @@ export async function createTable(sequelize: Sequelize): Promise<CourseInterface
                 console.error(error);
                 return undefined;
             }
+        },
+        async deleteCourseById(id: string) {
+            const result = await CourseSchema.destroy({
+                where: { Id: id }
+            });
+            return result === 1;
         }
     };
 
