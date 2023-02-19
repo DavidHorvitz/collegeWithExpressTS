@@ -7,7 +7,5 @@ export interface courseModel {
     Maximum_students: number,
     Is_ready: true
 
-
-
-
 }
+
