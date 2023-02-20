@@ -8,6 +8,7 @@ type Student_coursesModelSchemaModel = Model<student_coursesModel>
 export interface Student_coursesInterface {
     Schema: ModelStatic<Student_coursesModelSchemaModel>
     getCourseWithItsUser: (Course_name: string) => Promise<string>
+    addStudentToCourse :(studentId: string, courseId: string)=> Promise<void | undefined>
 
 }
 
@@ -46,6 +47,22 @@ export async function createTable(sequelize: Sequelize, Student: StudentInterfac
             }
             const data: any = result.toJSON();
             return data;
+        },
+        async addStudentToCourse(studentId: string, courseId: string) {
+            const Course = sequelize.models.course;
+            const Student = sequelize.models.student;
+
+            const course = await Course.findByPk(courseId);
+            if (!course) {
+                throw new Error(`Course with ID ${courseId} not found`);
+            }
+
+            const student = await Student.findByPk(studentId);
+            if (!student) {
+                throw new Error(`Student with ID ${studentId} not found`);
+            }
+
+            await (course as any).addStudent(student);
         }
 
 

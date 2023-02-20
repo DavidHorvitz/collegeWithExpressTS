@@ -52,6 +52,26 @@ export function createCourseRouter(db: DB) {
         res.json(course);
         console.log(course);
     })
+    courseRouter.post('/:courseId/student/:studentId', async (req: Request, res: Response) => {
+        const { courseId, studentId } = req.params;
+
+        if (!isUUID(courseId)) {
+            return res.status(400).json({ error: 'Invalid courseId parameter' });
+        }
+        if (!isUUID(studentId)) {
+            return res.status(400).json({ error: 'Invalid studentId parameter' });
+        }
+        const course = await db.Student_courses.addStudentToCourse(studentId, courseId);
+        if (!course) {
+            res.status(404).json({ status: 'not found' });
+        }
+        else {
+            res.status(200).json({ status: 'student adding to course is success !' });
+        }
+        res.json(course);
+        console.log(course);
+
+    });
 
     //DELETE
     //Remove course by id 
