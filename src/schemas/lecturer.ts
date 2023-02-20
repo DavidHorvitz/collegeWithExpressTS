@@ -34,7 +34,7 @@ export async function createTable(sequelize: Sequelize): Promise<LecturerInterfa
             createdAt: false,
         });
 
-    await LecturerSchema.sync();
+    await LecturerSchema.sync({force:true});
     return {
         Schema: LecturerSchema,
         async insert(lecturer) {

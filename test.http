@@ -1,6 +1,11 @@
  
+POST /api/courses/1191f991-6fc3-487c-979c-448b5d3e850c/student/23495b74-7ec9-4140-9ff9-871c5e2e8718 HTTP/1.1
+Content-Type: application/json
 
-DELETE http://localhost:8080/course/ab97367a-2739-4863-a4ea-4db6c264d72e HTTP/1.1 HTTP/1.1
+
+
+
+# DELETE http://localhost:8080/course/ab97367a-2739-4863-a4ea-4db6c264d72e HTTP/1.1 HTTP/1.1
 
 # PUT http://localhost:8080/course?course_name=React HTTP/1.1
 #  Content-Type: application/json

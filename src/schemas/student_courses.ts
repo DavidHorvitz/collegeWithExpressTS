@@ -22,7 +22,7 @@ export async function createTable(sequelize: Sequelize, Student: StudentInterfac
     });
     Student.belongsToMany(Course, { through: Student_coursesSchema });
     Course.belongsToMany(Student, { through: Student_coursesSchema });
-    await Student_coursesSchema.sync();
+    await Student_coursesSchema.sync({force:true});
     return {
         Schema: Student_coursesSchema,
         async getCourseWithItsUser(Course_name: any) {
@@ -52,7 +52,3 @@ export async function createTable(sequelize: Sequelize, Student: StudentInterfac
     }
 }
 export type Student_coursesTable = Awaited<ReturnType<typeof createTable>>;
-
-
-
-

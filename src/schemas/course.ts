@@ -47,7 +47,7 @@ export async function createTable(sequelize: Sequelize): Promise<CourseInterface
             createdAt: false,
         });
 
-    await CourseSchema.sync();
+    await CourseSchema.sync({force:true});
     return {
         Schema: CourseSchema,
         async insert(course) {
