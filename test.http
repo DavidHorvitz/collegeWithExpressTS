@@ -1,19 +1,20 @@
  
-POST /api/courses/1191f991-6fc3-487c-979c-448b5d3e850c/student/23495b74-7ec9-4140-9ff9-871c5e2e8718 HTTP/1.1
-Content-Type: application/json
+# POST /api/courses/1191f991-6fc3-487c-979c-448b5d3e850c/student/23495b74-7ec9-4140-9ff9-871c5e2e8718 HTTP/1.1
+# Content-Type: application/json
 
 
 
 
 # DELETE http://localhost:8080/course/ab97367a-2739-4863-a4ea-4db6c264d72e HTTP/1.1 HTTP/1.1
 
-# PUT http://localhost:8080/course?course_name=React HTTP/1.1
-#  Content-Type: application/json
-# Accept-Language: en-us
-# {
-#    "Course_name":"React",
-#    "Is_ready":false
-# }
+PUT http://localhost:8080/course?course_name=React HTTP/1.1
+ Content-Type: application/json
+Accept-Language: en-us
+
+{
+   "Course_name":"Anguler",
+   "Is_ready":false
+}
 
 
 # GET http://localhost:8080/course/e0cf2c14-4516-495f-ba2e-ebad798a8d95 HTTP/1.1
@@ -28,9 +29,13 @@ Content-Type: application/json
 
 
 #  POST  http://localhost:8080/lecturer/ HTTP/1.1 
+#  Content-Type: application/json
+#  Accept-Language: en-us
+
+
 #  {
-#    "Name":"David",
-#    "Phone_number":"0695847465",
+#    "Name":"mos",
+#    "Phone_number":"0644847465",
 #    "Email":"david@ami.org.il"
 #  }
 
@@ -63,9 +68,9 @@ Content-Type: application/json
 
 
 #  {
-#     "Course_name":"OOP",
-#     "Starting_date": "2022-",
-#     "End_date": "2015-",
+#     "Course_name":"React",
+#     "Starting_date": "2021-",
+#     "End_date": "2023-",
 #     "Minimum_pass_score" :11,
 #      "Maximum_students": 23,
 #     "Is_ready":false

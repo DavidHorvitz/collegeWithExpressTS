@@ -33,7 +33,7 @@ export async function createTable(sequelize: Sequelize, Course: CourseInterface[
     Course.hasMany(SyllabusSchema, { foreignKey: 'Course_id' });
     SyllabusSchema.belongsTo(Course, { foreignKey: 'Course_id' });
 
-    await SyllabusSchema.sync({force:true});
+    await SyllabusSchema.sync();
     return {
         Schema: SyllabusSchema
 

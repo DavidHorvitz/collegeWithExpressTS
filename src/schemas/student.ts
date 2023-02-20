@@ -34,7 +34,7 @@ export async function createTable(sequelize: Sequelize): Promise<StudentInterfac
             createdAt: false,
         });
 
-    await StudentSchema.sync({force:true});
+    await StudentSchema.sync();
     return {
         Schema: StudentSchema,
         async insert(student) {
