@@ -15,6 +15,24 @@ export function createCourseRouter(db: DB) {
         }
         res.json(course);
     });
+    //get a course with him students 
+    courseRouter.get('/:courseId/student/', async (req: Request, res: Response) => {
+        const { courseId } = req.params;
+
+        if (!isUUID(courseId)) {
+            return res.status(400).json({ error: 'Invalid courseId parameter' });
+        }
+
+        const course = await db.Student_courses.getCourseWithHimStudents(courseId);
+        if (!course) {
+            res.status(404).json({ status: 'not found' });
+        }
+        else {
+            res.status(200).json({ status: 'get course with his students succeeded !' });
+        }
+        console.log(course);
+
+    });
     //find course by name (http://localhost:8080/course?course_name=mos)
     courseRouter.get('/', async (req: Request, res: Response) => {
         const course_name = req.query.course_name as string;
@@ -38,20 +56,7 @@ export function createCourseRouter(db: DB) {
         }
         res.json(course);
     })
-
-    //PUT
-    //Update Course (http://localhost:8080/course?course_name=React)
-    //Just remember, after sending the request, you need to replace the name with
-    // URL because it has already been updated
-    courseRouter.put('/', async (req: Request, res: Response) => {
-        const course_name = req.query.course_name as string;
-        const course = await db.Course.updateCourseByName(course_name, req.body);
-        if (!course) {
-            res.status(404).json({ course: "Not Found" })
-        }
-        res.json(course);
-        console.log(course);
-    })
+    //This function adds a student to the course by adding the two PKs to the courseStudent linking table
     courseRouter.post('/:courseId/student/:studentId', async (req: Request, res: Response) => {
         const { courseId, studentId } = req.params;
 
@@ -72,6 +77,23 @@ export function createCourseRouter(db: DB) {
         console.log(course);
 
     });
+
+    //PUT
+    //Update Course (http://localhost:8080/course?course_name=React)
+    //Just remember, after sending the request, you need to replace the name with
+    // URL because it has already been updated
+    courseRouter.put('/', async (req: Request, res: Response) => {
+        const course_name = req.query.course_name as string;
+        const course = await db.Course.updateCourseByName(course_name, req.body);
+        if (!course) {
+            res.status(404).json({ course: "Not Found" })
+        }
+        res.json(course);
+        console.log(course);
+    })
+
+
+
 
     //DELETE
     //Remove course by id 
