@@ -2,6 +2,10 @@
 GET http://localhost:8080/student/8b7ceea3-e5c8-45ac-be7d-06430652459d/course/ HTTP/1.1
     'Content-Type': 'application/json',
     'Accept': 'application/json'
+###
+GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/ HTTP/1.1
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
 
 ###
 GET http://localhost:8080/course/8e5c07fe-a99c-4093-8b33-550224c99b91/student/ HTTP/1.1
@@ -10,7 +14,8 @@ GET http://localhost:8080/course/8e5c07fe-a99c-4093-8b33-550224c99b91/student/ H
   
 ###
 POST http://localhost:8080/course/8bec06b8-482f-4441-91be-e054d0096e68/student/8b7ceea3-e5c8-45ac-be7d-06430652459d HTTP/1.1
-
+###
+POST http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/8d86de93-8c85-4852-ad75-ca2b8b811fd3 HTTP/1.1
 
 
 ###
@@ -60,24 +65,24 @@ Accept-Language: en-us
 
  {
    "Name":"moshe",
-   "Phone_number":"0644847465",
-   "Email":"akyd@ami.org.il"
+   "Email":"akyd@ami.org.il",
+   "PhoneNumber":"0644847465"
  }
 
 ###
 
- POST  http://localhost:8080/course HTTP/1.1 
+ POST  http://localhost:8080/course/ HTTP/1.1 
 Content-Type: application/json
 Accept-Language: en-us
 
 
  {
-    "Course_name":"DevOps",
-    "Starting_date": "2023-02-01",
-    "End_date": "2023-05-01",
-    "Minimum_pass_score" :10,
-     "Maximum_students": 30,
-    "Is_ready":false
+    "CourseName":"OOP",
+    "StartingDate": "2022-02-01",
+    "EndDate": "2022-05-01",
+    "MinimumPassingScore" :10,
+     "MaximumStudents": 30,
+    "IsReady":true
  }
 
 ###

@@ -1,6 +1,8 @@
 
+import { Op } from "sequelize";
 import { Sequelize, DataTypes, Model, ModelStatic } from "sequelize";
 import * as AppModel from "../../model/mainModels"
+import { LecturerInterface } from "./Lecturer";
 
 
 type Course = Omit<AppModel.Course.Course, "ClassDates" | "Syllabus">
@@ -11,11 +13,13 @@ export interface CourseInterface {
     insert: (course: Omit<Course, "Id">) => Promise<Course>
     delete: (courseId: string) => Promise<boolean>
     searchById: (id: string) => Promise<AppModel.Course.Course | undefined>
-    searchByName: (course_name: string) => Promise<AppModel.Course.Course  | undefined>
-    updateCourseByName: (course_name: string, updates: Partial<AppModel.Course.Course >) => Promise<AppModel.Course.Course  | undefined>
+    searchByName: (course_name: string) => Promise<AppModel.Course.Course | undefined>
+    updateCourseByName: (course_name: string, updates: Partial<AppModel.Course.Course>) => Promise<AppModel.Course.Course | undefined>
+    getLecturerWithCurrentCourses: (lecturerId: string) => Promise<string>
+    addCourseToLecturer: (lecturerId: string, courseId: string) => Promise<void | undefined>
 }
 
-export async function createCourseTable(sequelize: Sequelize): Promise<CourseInterface> {
+export async function createCourseTable(sequelize: Sequelize, Lecturer: LecturerInterface["Schema"]): Promise<CourseInterface> {
     const CourseSchema = sequelize.define<CourseSchemaModel>("Course", {
         Id: {
             type: DataTypes.UUID,
@@ -50,7 +54,8 @@ export async function createCourseTable(sequelize: Sequelize): Promise<CourseInt
         schema: "college",
         createdAt: false,
     })
-
+    Lecturer.hasMany(CourseSchema, { foreignKey: 'LecturerId' });
+    CourseSchema.belongsTo(Lecturer, { foreignKey: 'LecturerId' });
     await CourseSchema.sync();
 
     return {
@@ -78,7 +83,7 @@ export async function createCourseTable(sequelize: Sequelize): Promise<CourseInt
             })
             return result?.toJSON();
         },
-        async updateCourseByName(course_name: string, updates: Partial<AppModel.Course.Course >) {
+        async updateCourseByName(course_name: string, updates: Partial<AppModel.Course.Course>) {
             try {
                 const [rowsAffected, [updatedCourse]] = await CourseSchema.update(updates, {
                     where: {
@@ -96,6 +101,46 @@ export async function createCourseTable(sequelize: Sequelize): Promise<CourseInt
                 console.error(error);
                 return undefined;
             }
+        },
+        async addCourseToLecturer(lecturerId: string, courseId: string) {
+            // const Lecturer = sequelize.models.lecturer;
+
+            const course = await CourseSchema.findByPk(courseId);
+            if (!course) {
+                throw new Error(`Course with ID ${courseId} not found`);
+            }
+
+            const lecturer = await Lecturer.findByPk(lecturerId);
+            if (!lecturer) {
+                throw new Error(`Student with ID ${lecturerId} not found`);
+            }
+
+            await (lecturer as any).addCourse(course);
+
+        },
+        async getLecturerWithCurrentCourses(lecturerId) {
+            const today = new Date();
+            const result = await Lecturer.findOne({
+                where: {
+                    Id: lecturerId,
+                },
+                attributes: ['Name', 'Id'],
+                include: [
+                    {
+                        model: CourseSchema,
+                        attributes: ['CourseName'],
+
+                        where: {
+                            EndDate: { [Op.gte]: today },
+                        }
+                    },
+                ]
+            });
+            if (!result) {
+                throw new Error('Course not found');
+            }
+            const data: any = result.toJSON();
+            return data;
         },
     }
 }

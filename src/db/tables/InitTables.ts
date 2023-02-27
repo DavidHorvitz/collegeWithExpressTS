@@ -10,7 +10,7 @@ import { CourseStudentInterface, createCourseStudentTable } from "./CourseStuden
 
 export async function initTables(connection: Sequelize) {
     const lecturer = await createLecturerTable(connection);
-    const course = await createCourseTable(connection);
+    const course = await createCourseTable(connection,lecturer.Schema);
     const student = await createStudentTable(connection);
     const classDate = await createClassDateTable(connection, course.Schema, lecturer.Schema);
     const syllabus = await createSyllabusTable(connection, course.Schema);

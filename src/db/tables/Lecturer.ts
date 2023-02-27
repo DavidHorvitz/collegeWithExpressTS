@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { Sequelize, DataTypes, Model, ModelStatic } from "sequelize";
 import * as AppModel from "../../model/mainModels"
 
@@ -8,6 +9,9 @@ export interface LecturerInterface {
     insert: (lecturer: Omit<AppModel.Lecturer.Lecturer, "Id">) => Promise<AppModel.Lecturer.Lecturer>
     searchById: (id: string) => Promise<AppModel.Lecturer.Lecturer | undefined>
     delete: (lecturerId: string) => Promise<boolean>
+  
+ 
+
 }
 
 export async function createLecturerTable(sequelize: Sequelize): Promise<LecturerInterface> {
@@ -53,6 +57,7 @@ export async function createLecturerTable(sequelize: Sequelize): Promise<Lecture
                 }
             })
             return result === 1;
-        },
+        }
+       
     };
 }

@@ -1,9 +1,58 @@
-import express from "express"
+import express, { Request, Response } from "express"
 import { isUUID, validateLecturer } from "./validation"
 import { DB } from "../db"
 
 export function createLecturerRoute(db: DB) {
     const router = express.Router();
+
+    router.get('/:lecturerId/course/', async (req: Request, res: Response) => {
+        const { lecturerId } = req.params;
+
+        if (!isUUID(lecturerId)) {
+            return res.status(400).json({ error: 'Invalid courseId parameter' });
+        }
+
+        const lecturer = await db.Course.getLecturerWithCurrentCourses(lecturerId);
+        if (!lecturer) {
+            res.status(404).json({ status: 'not found' });
+        }
+        else {
+            res.status(200).json({ status: 'get lecturer with his Course succeeded !' });
+        }
+        console.log(lecturer);
+
+    });
+
+    router.post("/", async (req, res) => {
+        try {
+            const lecturer = validateLecturer(req.body)
+            const result = await db.Lecturer.insert(lecturer);
+            res.status(201).json({ status: "created", data: result })
+        }
+        catch (e) {
+            res.status(400).json({ status: "invalid input" })
+        }
+    })
+
+    router.post('/:lecturerId/course/:courseId', async (req: Request, res: Response) => {
+        const { courseId, lecturerId } = req.params;
+
+        if (!isUUID(courseId)) {
+            return res.status(400).json({ error: 'Invalid courseId parameter' });
+        }
+        if (!isUUID(lecturerId)) {
+            return res.status(400).json({ error: 'Invalid lecturerId parameter' });
+        }
+        const course = await db.Course.addCourseToLecturer(lecturerId, courseId);
+        if (!course) {
+            res.status(404).json({ status: 'not found' });
+        }
+        else {
+            res.status(200).json({ status: 'course adding to lecturer is success !' });
+        }
+        console.log(course);
+
+    });
 
     router.delete("/:lecturerId", async (req, res) => {
         try {
@@ -15,19 +64,6 @@ export function createLecturerRoute(db: DB) {
                 res.status(404).json({ status: "not found" })
             }
         } catch (e) {
-            res.status(400).json({ status: "invalid input" })
-        }
-    })
-
-
-
-    router.post("/", async (req, res) => {
-        try {
-            const lecturer = validateLecturer(req.body)
-            const result = await db.Lecturer.insert(lecturer);
-            res.status(201).json({ status: "created", data: result })
-        }
-        catch (e) {
             res.status(400).json({ status: "invalid input" })
         }
     })
