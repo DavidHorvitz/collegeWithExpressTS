@@ -1,13 +1,13 @@
 import { Model, ModelStatic, Sequelize } from 'sequelize';
-import { student_coursesModel } from '../models/student_coursesModel';
-import { StudentInterface } from './student';
-import { CourseInterface } from './course';
+import * as AppModel from "../../model/mainModels"
+import { CourseInterface } from "./Course";
+import { StudentInterface } from './Student';
 import { Op } from 'sequelize';
 
-type Student_coursesModelSchemaModel = Model<student_coursesModel>
+type CourseStudentModelSchemaModel = Model<AppModel.CourseStudent.course_student>
 
-export interface Student_coursesInterface {
-    Schema: ModelStatic<Student_coursesModelSchemaModel>
+export interface CourseStudentInterface {
+    Schema: ModelStatic<CourseStudentModelSchemaModel>
     getCourseWithHimStudents: (courseId: string) => Promise<string>
     getStudentWithHimCourses: (studentId: string) => Promise<string>
     getStudentWithHimCoursesWhereTimeBetween: (studentId: string) => Promise<string>
@@ -16,20 +16,20 @@ export interface Student_coursesInterface {
 
 }
 
-export async function createTable(sequelize: Sequelize, Student: StudentInterface["Schema"], Course: CourseInterface["Schema"]):
-    Promise<Student_coursesInterface> {
-    const Student_coursesSchema = sequelize.define<Student_coursesModelSchemaModel>('student_courses', {
+export async function createCourseStudentTable(sequelize: Sequelize, Student: StudentInterface["Schema"], Course: CourseInterface["Schema"]):
+    Promise<CourseStudentInterface> {
+    const Course_StudentSchema = sequelize.define<CourseStudentModelSchemaModel>('Course_Student', {
 
-    } as student_coursesModel, {
+    } as AppModel.CourseStudent.course_student, {
         schema: "college",
         createdAt: false
 
     });
-    Student.belongsToMany(Course, { through: Student_coursesSchema });
-    Course.belongsToMany(Student, { through: Student_coursesSchema });
-    await Student_coursesSchema.sync();
+    Student.belongsToMany(Course, { through: Course_StudentSchema });
+    Course.belongsToMany(Student, { through: Course_StudentSchema });
+    await Course_StudentSchema.sync();
     return {
-        Schema: Student_coursesSchema,
+        Schema: Course_StudentSchema,
         async getCourseWithHimStudents(courseId) {
             const result = await Course.findOne({
                 where: {
@@ -135,6 +135,7 @@ export async function createTable(sequelize: Sequelize, Student: StudentInterfac
         //     const registeredCourses = await student.getStudentWithHimCourses()
 
         //     // Check if any of those courses overlap with the start and end dates of the new course
+        //     // const overlaps = registeredCourses.some((registeredCourse: { Starting_date: string | number | Date; End_date: string | number | Date; }) => {
         //     const overlaps = registeredCourses.some(registeredCourse => {
         //         const registeredCourseStart = new Date(registeredCourse.Starting_date).getTime();
         //         const registeredCourseEnd = new Date(registeredCourse.End_date).getTime();
@@ -156,4 +157,4 @@ export async function createTable(sequelize: Sequelize, Student: StudentInterfac
 
     }
 }
-export type Student_coursesTable = Awaited<ReturnType<typeof createTable>>;
+export type Student_coursesTable = Awaited<ReturnType<typeof createCourseStudentTable>>;

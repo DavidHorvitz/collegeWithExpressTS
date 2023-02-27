@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express"
-import { DB } from "../index"
-import { isUUID } from "../validate/validateUUID";
+import { DB } from "../db"
+import { isUUID } from "./validation";
 
 export function createStudentRoute(db: DB) {
     const studentRouter = express.Router();
 
     studentRouter.get('/:studentId', async (req, res) => {
-        const student = await db.Student.searchById(req.params.studentId);
+        const student = await db.Student.search(req.params.studentId);
         if (!student) {
             res.status(404).json({ status: "Not Found" })
         }
@@ -26,7 +26,7 @@ export function createStudentRoute(db: DB) {
             return res.status(400).json({ error: 'Invalid courseId parameter' });
         }
 
-        const student = await db.Student_courses.getStudentWithHimCoursesWhereTimeBetween(studentId);
+        const student = await db.CourseStudent.getStudentWithHimCoursesWhereTimeBetween(studentId);
         if (!student) {
             res.status(404).json({ status: 'not found' });
         }

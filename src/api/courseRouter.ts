@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express"
-import { DB } from "../index";
-import { isUUID } from "../validate/validateUUID";
+import { DB } from '../db'
+import { isUUID } from "./validation";
 
-export function createCourseRouter(db: DB) {
+export function createCourseRoute(db: DB) {
     const courseRouter = express.Router();
     //GET
     //find by ID (http://localhost:8080/course/e0cf2c14-4516-495f-ba2e-ebad798a8d95)
@@ -23,7 +23,7 @@ export function createCourseRouter(db: DB) {
             return res.status(400).json({ error: 'Invalid courseId parameter' });
         }
 
-        const course = await db.Student_courses.getCourseWithHimStudents(courseId);
+        const course = await db.CourseStudent.getCourseWithHimStudents(courseId);
         if (!course) {
             res.status(404).json({ status: 'not found' });
         }
@@ -31,6 +31,7 @@ export function createCourseRouter(db: DB) {
             res.status(200).json({ status: 'get course with his students succeeded !' });
         }
         console.log(course);
+        // res.json(course)
 
     });
     //find course by name (http://localhost:8080/course?course_name=mos)
@@ -66,7 +67,7 @@ export function createCourseRouter(db: DB) {
         if (!isUUID(studentId)) {
             return res.status(400).json({ error: 'Invalid studentId parameter' });
         }
-        const course = await db.Student_courses.addStudentToCourse(studentId, courseId);
+        const course = await db.CourseStudent.addStudentToCourse(studentId, courseId);
         if (!course) {
             res.status(404).json({ status: 'not found' });
         }
@@ -116,7 +117,7 @@ export function createCourseRouter(db: DB) {
             return res.status(400).json({ error: 'Invalid courseId parameter' });
         }
 
-        const course = await db.Course.deleteCourseById(courseId);
+        const course = await db.Course.delete(courseId);
         if (course) {
             return res.status(200).json({ status: 'deleted' });
         } else {
