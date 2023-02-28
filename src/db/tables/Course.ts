@@ -16,6 +16,7 @@ export interface CourseInterface {
     searchByName: (course_name: string) => Promise<AppModel.Course.Course | undefined>
     updateCourseByName: (course_name: string, updates: Partial<AppModel.Course.Course>) => Promise<AppModel.Course.Course | undefined>
     getLecturerWithCurrentCourses: (lecturerId: string) => Promise<string>
+    getLecturerWithBetweenDates: (lecturerId: string, startDate: Date, endDate: Date) => Promise<string | undefined>
     addCourseToLecturer: (lecturerId: string, courseId: string) => Promise<void | undefined>
 }
 
@@ -31,11 +32,11 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
             allowNull: false
         },
         StartingDate: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         EndDate: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         MinimumPassingScore: {
@@ -103,7 +104,6 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
             }
         },
         async addCourseToLecturer(lecturerId: string, courseId: string) {
-            // const Lecturer = sequelize.models.lecturer;
 
             const course = await CourseSchema.findByPk(courseId);
             if (!course) {
@@ -132,6 +132,30 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
 
                         where: {
                             EndDate: { [Op.gte]: today },
+                        }
+                    },
+                ]
+            });
+            if (!result) {
+                throw new Error('Course not found');
+            }
+            const data: any = result.toJSON();
+            return data;
+        },
+        async getLecturerWithBetweenDates(lecturerId, startDate, endDate) {
+            const result = await Lecturer.findOne({
+                where: {
+                    Id: lecturerId,
+                },
+                attributes: ['Name', 'Id'],
+                include: [
+                    {
+                        model: CourseSchema,
+                        attributes: ['CourseName'],
+
+                        where: {
+                            StartingDate: { [Op.between]: [startDate, endDate] },
+                            EndDate: { [Op.between]: [startDate, endDate] },
                         }
                     },
                 ]

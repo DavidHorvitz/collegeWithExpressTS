@@ -3,7 +3,12 @@ GET http://localhost:8080/student/8b7ceea3-e5c8-45ac-be7d-06430652459d/course/ H
     'Content-Type': 'application/json',
     'Accept': 'application/json'
 ###
-GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/ HTTP/1.1
+GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/current HTTP/1.1
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+
+###
+GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/betweenDates?startDate=2022-01-01&endDate=2023-06-07 HTTP/1.1
     'Content-Type': 'application/json',
     'Accept': 'application/json'
 
@@ -15,7 +20,9 @@ GET http://localhost:8080/course/8e5c07fe-a99c-4093-8b33-550224c99b91/student/ H
 ###
 POST http://localhost:8080/course/8bec06b8-482f-4441-91be-e054d0096e68/student/8b7ceea3-e5c8-45ac-be7d-06430652459d HTTP/1.1
 ###
-POST http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/8d86de93-8c85-4852-ad75-ca2b8b811fd3 HTTP/1.1
+POST http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/3e6b2c22-6240-471e-9a85-1766f14f9914 HTTP/1.1
+###
+POST http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/classDate/5dd2a959-4ec6-4577-97d3-6c3a64f87c20 HTTP/1.1
 
 
 ###
@@ -68,6 +75,8 @@ Accept-Language: en-us
    "Email":"akyd@ami.org.il",
    "PhoneNumber":"0644847465"
  }
+ ###
+
 
 ###
 
@@ -77,18 +86,37 @@ Accept-Language: en-us
 
 
  {
-    "CourseName":"OOP",
-    "StartingDate": "2022-02-01",
-    "EndDate": "2022-05-01",
+    "CourseName":"React",
+    "StartingDate": "2022-09-01",
+    "EndDate": "2024-07-20",
     "MinimumPassingScore" :10,
      "MaximumStudents": 30,
     "IsReady":true
  }
 
 ###
+
  GET  http://localhost:8080/course/:courseId HTTP/1.1 
 
-   #  "ID":"e0cf2c14-4516-495f-ba2e-ebad798a8d95"
+###
+
+
+ POST  http://localhost:8080/classDate/ HTTP/1.1 
+ Content-Type: application/json
+ Accept-Language: en-us
+
+
+ {
+   "StartHour":"10:30:00",
+   "EndDate":"12:00:00",
+   "RoomId":"1",
+   "EntryInSyllabus":"Application"
+
+
+ }
+ 
+
+
 
 
 

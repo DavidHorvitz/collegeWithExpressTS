@@ -66,8 +66,8 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                             attributes: [],
                         },
                         where: {
-                            Starting_date: { [Op.between]: ['2023-01-01 02:00:00+02', '2023-05-01 03:00:00+03'] },
-                            End_date: { [Op.between]: ['2023-01-01 02:00:00+02', '2023-05-01 03:00:00+03'] },
+                            StartingDate: { [Op.between]: ['2023-01-01 02:00:00+02', '2023-05-01 03:00:00+03'] },
+                            EndDate: { [Op.between]: ['2023-01-01 02:00:00+02', '2023-05-01 03:00:00+03'] },
                         }
                     }
                 ]

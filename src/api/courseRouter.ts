@@ -57,6 +57,7 @@ export function createCourseRoute(db: DB) {
         }
         res.json(course);
     })
+    
     //This function adds a student to the course by adding the two PKs to the courseStudent linking table
     courseRouter.post('/:courseId/student/:studentId', async (req: Request, res: Response) => {
         const { courseId, studentId } = req.params;

@@ -2,7 +2,7 @@
 import { Sequelize } from "sequelize";
 import { LecturerInterface, createLecturerTable } from "./Lecturer"
 import { CourseInterface, createCourseTable } from "./Course";
-import { ClassDateInterface, createClassDateTable } from "./ClassDate";
+import { ClassDateInterface, createClassDateTable } from "../../api/ClassDate";
 import { SyllabusInterface, createSyllabusTable } from "./Syllabus";
 import { StudentInterface, createStudentTable } from "./Student";
 import { CourseStudentInterface, createCourseStudentTable } from "./CourseStudent";

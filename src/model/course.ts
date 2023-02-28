@@ -1,8 +1,8 @@
 
 export interface ClassDate {
     Id: string;
-    StartHour: string;
-    EndDate: string;
+    StartHour: Date;
+    EndDate: Date;
     RoomId: string;
     EntryInSyllabus: string;
     LecturerId?: string;

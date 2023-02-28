@@ -5,7 +5,7 @@ import { DB } from "../db"
 export function createLecturerRoute(db: DB) {
     const router = express.Router();
 
-    router.get('/:lecturerId/course/', async (req: Request, res: Response) => {
+    router.get('/:lecturerId/course/current', async (req: Request, res: Response) => {
         const { lecturerId } = req.params;
 
         if (!isUUID(lecturerId)) {
@@ -13,6 +13,28 @@ export function createLecturerRoute(db: DB) {
         }
 
         const lecturer = await db.Course.getLecturerWithCurrentCourses(lecturerId);
+        if (!lecturer) {
+            res.status(404).json({ status: 'not found' });
+        }
+        else {
+            res.status(200).json({ status: 'get lecturer with his Course succeeded !' });
+        }
+        console.log(lecturer);
+
+    });
+
+    router.get('/:lecturerId/course/betweenDates', async (req: Request, res: Response) => {
+        const { lecturerId } = req.params;
+        const { startDate, endDate } = req.query;
+
+        const startDateObj = startDate ? new Date(startDate.toString()) : new Date();
+        const endDateObj = endDate ? new Date(endDate.toString()) : new Date();
+
+        if (!isUUID(lecturerId)) {
+            return res.status(400).json({ error: 'Invalid courseId parameter' });
+        }
+
+        const lecturer = await db.Course.getLecturerWithBetweenDates(lecturerId, startDateObj, endDateObj);
         if (!lecturer) {
             res.status(404).json({ status: 'not found' });
         }
@@ -51,6 +73,25 @@ export function createLecturerRoute(db: DB) {
             res.status(200).json({ status: 'course adding to lecturer is success !' });
         }
         console.log(course);
+
+    });
+    router.post('/:lecturerId/classDate/:classDateId', async (req: Request, res: Response) => {
+        const { classDateId, lecturerId } = req.params;
+
+        if (!isUUID(classDateId)) {
+            return res.status(400).json({ error: 'Invalid classDateId parameter' });
+        }
+        if (!isUUID(lecturerId)) {
+            return res.status(400).json({ error: 'Invalid lecturerId parameter' });
+        }
+        const classDate = await db.ClassDate.addClassDateToLecturer(lecturerId, classDateId);
+        if (!classDate) {
+            res.status(404).json({ status: 'not found' });
+        }
+        else {
+            res.status(200).json({ status: 'course adding to lecturer is success !' });
+        }
+        console.log(classDate);
 
     });
 

@@ -1,13 +1,15 @@
 import { Sequelize, DataTypes, Model, ModelStatic } from "sequelize";
-import * as AppModel from "../../model/mainModels"
-import { CourseInterface } from "./Course";
-import { LecturerInterface } from "./Lecturer";
+import * as AppModel from "../model/mainModels"
+import { CourseInterface } from "../db/tables/Course";
+import { LecturerInterface } from "../db/tables/Lecturer";
 type ClassDateSchemaModel = Model<Omit<AppModel.Course.ClassDate, 'lecturerId'>>
 
 export interface ClassDateInterface {
     Schema: ModelStatic<ClassDateSchemaModel>
     insert: (classDate_id: Omit<AppModel.Course.ClassDate, "Id">) => Promise<AppModel.Course.ClassDate>
     delete: (classDate_id: string) => Promise<boolean>
+    addClassDateToLecturer: (lecturerId: string, classDateId: string) => Promise<void | undefined>
+
 }
 
 export async function createClassDateTable(sequelize: Sequelize,
@@ -20,11 +22,11 @@ export async function createClassDateTable(sequelize: Sequelize,
             defaultValue: DataTypes.UUIDV4
         },
         StartHour: {
-            type: DataTypes.STRING,
+            type: DataTypes.TIME,
             allowNull: false,
         },
         EndDate: {
-            type: DataTypes.STRING,
+            type: DataTypes.TIME,
             allowNull: false,
         },
         RoomId: {
@@ -43,8 +45,7 @@ export async function createClassDateTable(sequelize: Sequelize,
     ClassDateSchema.belongsTo(Course, { foreignKey: 'Course_id' });
     Lecturer.hasMany(ClassDateSchema, { foreignKey: 'Lecturer_id' });
     ClassDateSchema.belongsTo(Lecturer, { foreignKey: 'Lecturer_id' });
-    await ClassDateSchema.sync();
-
+    
     return {
         Schema: ClassDateSchema,
         async insert(classDate) {
@@ -58,6 +59,22 @@ export async function createClassDateTable(sequelize: Sequelize,
                 }
             })
             return result === 1;
+        },
+        async addClassDateToLecturer(lecturerId: string, classDateId: string) {
+            // const Lecturer = sequelize.models.lecturer;
+
+            const classDate = await ClassDateSchema.findByPk(classDateId);
+            if (!classDate) {
+                throw new Error(`Course with ID ${classDateId} not found`);
+            }
+
+            const lecturer = await Lecturer.findByPk(lecturerId);
+            if (!lecturer) {
+                throw new Error(`Student with ID ${lecturerId} not found`);
+            }
+
+            await (lecturer as any).addClassDate(classDate);
+
         },
     };
 }
