@@ -9,7 +9,8 @@ type CourseStudentModelSchemaModel = Model<AppModel.CourseStudent.course_student
 export interface CourseStudentInterface {
     Schema: ModelStatic<CourseStudentModelSchemaModel>
     getCourseWithHimStudents: (courseId: string) => Promise<string>
-    getStudentWithHimCourses: (studentId: string) => Promise<string>
+    getStudentWithHimCurrentCourses: (studentId: string) => Promise<string>
+    getStudentWithHimHistoryCourses: (studentId: string) => Promise<string>
     getStudentWithHimCoursesWhereTimeBetween: (studentId: string) => Promise<string>
     addStudentToCourse: (studentId: string, courseId: string) => Promise<void | undefined>
     // addStudentToCourseIfNotRegisterToAnotherCourseAtSameDate: (studentId: string, courseId: string) => Promise<void | undefined>
@@ -40,9 +41,7 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                     {
                         model: Student,
                         attributes: ['Name', 'Phone_number', 'Email'],
-                        through: {
-                            attributes: [],
-                        }
+                       
                     }
                 ]
             });
@@ -57,11 +56,11 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                 where: {
                     Id: studentId,
                 },
-                attributes: ['Name', 'Phone_number', 'Email'],
+                attributes: ['Name', 'PhoneNumber', 'Email'],
                 include: [
                     {
                         model: Course,
-                        attributes: ['Course_name', 'Starting_date', 'End_date'],
+                        attributes: ['CourseName', 'StartingDate', 'EndDate'],
                         through: {
                             attributes: [],
                         },
@@ -78,19 +77,43 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
             const data: any = result.toJSON();
             return data;
         },
-        async getStudentWithHimCourses(studentId) {
+        async getStudentWithHimCurrentCourses(studentId) {
+            const today = new Date();
             const result = await Student.findOne({
                 where: {
                     Id: studentId,
                 },
-                attributes: ['Name', 'Phone_number', 'Email'],
+                attributes: ['Name', 'PhoneNumber', 'Email'],
                 include: [
                     {
                         model: Course,
-                        attributes: ['Course_name', 'Starting_date', 'End_date'],
-                        through: {
-                            attributes: [],
-                        },
+                        attributes: ['CourseName', 'StartingDate', 'EndDate'],
+                        where: {
+                            EndDate: { [Op.gte]: today },
+                        }
+                    }
+                ]
+            });
+            if (!result) {
+                throw new Error(' not found student or course');
+            }
+            const data: any = result.toJSON();
+            return data;
+        },
+        async getStudentWithHimHistoryCourses(studentId) {
+            const today = new Date();
+            const result = await Student.findOne({
+                where: {
+                    Id: studentId,
+                },
+                attributes: ['Name', 'PhoneNumber', 'Email'],
+                include: [
+                    {
+                        model: Course,
+                        attributes: ['CourseName', 'StartingDate', 'EndDate'],
+                        where: {
+                            EndDate: { [Op.lte]: today },
+                        }
                     }
                 ]
             });
@@ -101,8 +124,8 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
             return data;
         },
         async addStudentToCourse(studentId: string, courseId: string) {
-            const Course = sequelize.models.course;
-            const Student = sequelize.models.student;
+            // const Course = sequelize.models.course;
+            // const Student = sequelize.models.student;
 
             const course = await Course.findByPk(courseId);
             if (!course) {

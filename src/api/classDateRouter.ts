@@ -11,6 +11,25 @@ export function createClassDateRoute(db: DB) {
         }
         res.json(classDate);
     });
+    classDateRouter.post('/:classDateId/:lecturer/:lecturerId', async (req: Request, res: Response) => {
+        const { classDateId, lecturerId } = req.params;
 
-return classDateRouter;
+        if (!isUUID(classDateId)) {
+            return res.status(400).json({ error: 'Invalid classDateId parameter' });
+        }
+        if (!isUUID(lecturerId)) {
+            return res.status(400).json({ error: 'Invalid lecturerId parameter' });
+        }
+        const classDate: any = await db.ClassDate.addClassDateToLecturer(lecturerId, classDateId);
+        if (!classDate) {
+            res.status(404).json({ status: 'not found' });
+        }
+        else {
+            res.status(200).json({ status: 'course adding to lecturer is success !' });
+        }
+        console.log(classDate);
+
+    });
+
+    return classDateRouter;
 }
