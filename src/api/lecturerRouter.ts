@@ -44,27 +44,27 @@ export function createLecturerRoute(db: DB) {
         console.log(lecturer);
 
     });
-    router.get('/:lecturerId/course/betweenDates', async (req: Request, res: Response) => {
-        const { lecturerId } = req.params;
-        const { startDate, endDate } = req.query;
+    // router.get('/:lecturerId//betweenDates', async (req: Request, res: Response) => {
+    //     const { lecturerId } = req.params;
+    //     const { startDate, endDate } = req.query;
 
-        const startDateObj = startDate ? new Date(startDate.toString()) : new Date();
-        const endDateObj = endDate ? new Date(endDate.toString()) : new Date();
+    //     const startDateObj = startDate ? new Date(startDate.toString()) : new Date();
+    //     const endDateObj = endDate ? new Date(endDate.toString()) : new Date();
 
-        if (!isUUID(lecturerId)) {
-            return res.status(400).json({ error: 'Invalid lecturerId parameter' });
-        }
+    //     if (!isUUID(lecturerId)) {
+    //         return res.status(400).json({ error: 'Invalid lecturerId parameter' });
+    //     }
 
-        const lecturer = await db.ClassDate.gettingLecturersScheduleBetweenDates(lecturerId, startDateObj, endDateObj);
-        if (!lecturer) {
-            res.status(404).json({ status: 'not found' });
-        }
-        else {
-            res.status(200).json({ status: 'get lecturer with his Course succeeded !' });
-        }
-        console.log(lecturer);
+    //     const lecturer = await db.ClassDate.gettingLecturersScheduleBetweenDates(lecturerId, startDateObj, endDateObj);
+    //     if (!lecturer) {
+    //         res.status(404).json({ status: 'not found' });
+    //     }
+    //     else {
+    //         res.status(200).json({ status: 'get lecturer with his Course succeeded !' });
+    //     }
+    //     console.log(lecturer);
 
-    });
+    // });
 
     router.post("/", async (req, res) => {
         try {

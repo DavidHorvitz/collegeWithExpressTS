@@ -10,6 +10,7 @@ export interface ClassDateInterface {
     insert: (classDate_id: Omit<AppModel.Course.ClassDate, "Id">) => Promise<AppModel.Course.ClassDate>
     delete: (classDate_id: string) => Promise<boolean>
     addClassDateToLecturer: (lecturerId: string, classDateId: string) => Promise<void>
+    addClassDateToCourse: (courseId: string, classDateId: string) => Promise<void>
     gettingLecturersScheduleBetweenDates: (lecturerId: string, startHour: Date, endDate: Date) => Promise<string | undefined>
 
 }
@@ -74,6 +75,19 @@ export async function createClassDateTable(sequelize: Sequelize,
                 throw new Error(`lecturer with ID ${lecturerId} not found`);
             }
             await (classDate as any).setLecturer(lecturer);
+        },
+        async addClassDateToCourse(courseId, classDateId) {
+
+            const classDate = await ClassDateSchema.findByPk(classDateId);
+            if (!classDate) {
+                throw new Error(`classDate with ID ${classDateId} not found`);
+            }
+
+            const course = await Course.findByPk(courseId);
+            if (!course) {
+                throw new Error(`lecturer with ID ${courseId} not found`);
+            }
+            await (classDate as any).setCourse(course);
         },
  
         async gettingLecturersScheduleBetweenDates(lecturerId, startHour, endDate) {
