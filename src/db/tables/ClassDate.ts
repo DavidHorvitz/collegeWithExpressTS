@@ -11,7 +11,7 @@ export interface ClassDateInterface {
     delete: (classDate_id: string) => Promise<boolean>
     addClassDateToLecturer: (lecturerId: string, classDateId: string) => Promise<void>
     addClassDateToCourse: (courseId: string, classDateId: string) => Promise<void>
-    gettingLecturersScheduleBetweenDates: (lecturerId: string, startHour: Date, endDate: Date) => Promise<string | undefined>
+    gettingLecturersScheduleBetweenDates: (lecturerId: string, startingDate: Date, endDate: Date) => Promise<AppModel.Lecturer.Lecturer | undefined>
 
 }
 
@@ -28,7 +28,7 @@ export async function createClassDateTable(sequelize: Sequelize,
             type: DataTypes.TIME,
             allowNull: false,
         },
-        EndDate: {
+        EndHour: {
             type: DataTypes.TIME,
             allowNull: false,
         },
@@ -48,7 +48,7 @@ export async function createClassDateTable(sequelize: Sequelize,
     ClassDateSchema.belongsTo(Course, { foreignKey: 'Course_id' });
     Lecturer.hasMany(ClassDateSchema, { foreignKey: 'Lecturer_id' });
     ClassDateSchema.belongsTo(Lecturer, { foreignKey: 'Lecturer_id' });
-
+    await ClassDateSchema.sync();
     return {
         Schema: ClassDateSchema,
         async insert(classDate) {
@@ -89,32 +89,45 @@ export async function createClassDateTable(sequelize: Sequelize,
             }
             await (classDate as any).setCourse(course);
         },
- 
-        async gettingLecturersScheduleBetweenDates(lecturerId, startHour, endDate) {
-            const classDate = await ClassDateSchema.findAll({
+
+        async gettingLecturersScheduleBetweenDates(lecturerId, startingDate, endDate) {
+            const classDate = await Lecturer.findAll({
+                attributes: ['Name'],
+                where: { Id: lecturerId },
                 include: [
                     {
-                        model: Lecturer,
-                        attributes: ['Name'],
-                        where: { Id: lecturerId }
-                    }
+                        model: ClassDateSchema,
+                        attributes: ['RoomId', 'StartHour', 'EndHour', 'EntryInSyllabus'],
+
+                    },
+                    {
+                        model: Course,
+                        attributes: ['CourseName'],
+                        where: {
+                            StartingDate: { [Op.gte]: startingDate, },
+                            EndDate: { [Op.lte]: endDate, },
+                        }
+                    },
+
+
                 ],
-                where: {
-                    StartHour: {
-                        [Op.gte]: startHour,
-                    },
-                    EndDate: {
-                        [Op.lte]: endDate,
-                    },
-                },
             });
             if (!classDate) {
-                throw new Error(' not found student or course');
+                return undefined;
             }
-            const data: any = classDate.toString();
+            const data: any = classDate;
             return data;
-        }
 
-
+        },
     };
 }
+// include: [
+//     {
+//         model: Course,
+//         attributes: ['CourseName'],
+//         where: {
+//             StartingDate: { [Op.gte]: startingDate, },
+//             EndDate: { [Op.lte]: endDate, },
+//         },
+//     },
+// ],

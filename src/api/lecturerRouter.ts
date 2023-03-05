@@ -44,28 +44,27 @@ export function createLecturerRoute(db: DB) {
         console.log(lecturer);
 
     });
-    // router.get('/:lecturerId//betweenDates', async (req: Request, res: Response) => {
-    //     const { lecturerId } = req.params;
-    //     const { startDate, endDate } = req.query;
+    router.get('/:lecturerId/schedule', async (req: Request, res: Response) => {
+        const { lecturerId } = req.params;
+        const { startingDate, endDate } = req.query;
 
-    //     const startDateObj = startDate ? new Date(startDate.toString()) : new Date();
-    //     const endDateObj = endDate ? new Date(endDate.toString()) : new Date();
+        const startingDateObj = startingDate ? new Date(startingDate.toString()) : new Date();
+        const endDateObj = endDate ? new Date(endDate.toString()) : new Date();
 
-    //     if (!isUUID(lecturerId)) {
-    //         return res.status(400).json({ error: 'Invalid lecturerId parameter' });
-    //     }
+        if (!isUUID(lecturerId)) {
+            return res.status(400).json({ error: 'Invalid lecturerId parameter' });
+        }
 
-    //     const lecturer = await db.ClassDate.gettingLecturersScheduleBetweenDates(lecturerId, startDateObj, endDateObj);
-    //     if (!lecturer) {
-    //         res.status(404).json({ status: 'not found' });
-    //     }
-    //     else {
-    //         res.status(200).json({ status: 'get lecturer with his Course succeeded !' });
-    //     }
-    //     console.log(lecturer);
+        const lecturerSchedule = await db.ClassDate.gettingLecturersScheduleBetweenDates(lecturerId, startingDateObj, endDateObj);
+        if (!lecturerSchedule) {
+            res.status(404).json({ status: 'not found' });
+        }
+        else {
+            res.status(200).json({ status: 'gettingLecturersSchedule function  succeeded !', lecturer: lecturerSchedule });
+        }
+        console.log(lecturerSchedule);
 
-    // });
-
+    });
     router.post("/", async (req, res) => {
         try {
             const lecturer = validateLecturer(req.body)

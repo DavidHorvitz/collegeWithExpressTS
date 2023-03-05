@@ -18,10 +18,9 @@ GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/b
     'Content-Type': 'application/json',
     'Accept': 'application/json'
 ###
-GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/betweenDates?startDate=2022-01-01&endDate=2023-06-07 HTTP/1.1
+GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/schedule?startDate=2000-01-01&endDate=2025-06-07 HTTP/1.1
     'Content-Type': 'application/json',
     'Accept': 'application/json'
-
 ###
 GET http://localhost:8080/course/8e5c07fe-a99c-4093-8b33-550224c99b91/student/ HTTP/1.1
     'Content-Type': 'application/json',
@@ -32,10 +31,10 @@ POST http://localhost:8080/course/adb09d5a-6af6-418f-a592-360fbe950722/student/1
 ###
 POST http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/adb09d5a-6af6-418f-a592-360fbe950722 HTTP/1.1
 ###
-POST http://localhost:8080/classDate/2d72f676-b32d-4894-96d0-889f15e9db89/lecturer/48d2b743-536e-4499-abca-613deb64e4a3 HTTP/1.1
+POST http://localhost:8080/classDate/770bc03c-1833-4490-a055-392fa9238cb5/lecturer/48d2b743-536e-4499-abca-613deb64e4a3 HTTP/1.1
 
-###
-POST http://localhost:8080/classDate/5dd2a959-4ec6-4577-97d3-6c3a64f87c20/course/da122aa8-016f-4c93-8743-22a17cc87364 HTTP/1.1
+###c2301afa-1425-4155-92f2-7ae04a98737f
+POST http://localhost:8080/classDate/e4bda376-c356-4862-8a7e-34e11b71cc56/course/da122aa8-016f-4c93-8743-22a17cc87364 HTTP/1.1
 
 
 ###
@@ -120,10 +119,10 @@ Accept-Language: en-us
 
 
  {
-   "StartHour":"14:00:00",
-   "EndDate":"17:00:00",
-   "RoomId":"2",
-   "EntryInSyllabus":"Date Base"
+   "StartHour":"05:00:00",
+   "EndHour":"16:00:00",
+   "RoomId":"4",
+   "EntryInSyllabus":"ש 2"
 
 
  }
