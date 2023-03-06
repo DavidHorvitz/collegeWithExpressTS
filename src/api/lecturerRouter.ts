@@ -4,7 +4,7 @@ import { DB } from "../db"
 
 export function createLecturerRoute(db: DB) {
     const router = express.Router();
-
+//This API gets the current courses for a specific lecturer by Id
     router.get('/:lecturerId/course/current', async (req: Request, res: Response) => {
         const { lecturerId } = req.params;
 
@@ -22,7 +22,7 @@ export function createLecturerRoute(db: DB) {
         console.log(lecturer);
 
     });
-
+//This API gets a courses between dates for a specific lecturer by Id
     router.get('/:lecturerId/course/betweenDates', async (req: Request, res: Response) => {
         const { lecturerId } = req.params;
         const { startDate, endDate } = req.query;
@@ -44,6 +44,7 @@ export function createLecturerRoute(db: DB) {
         console.log(lecturer);
 
     });
+    //This API gets a schedule for a specific lecturer by ID between certain dates
     router.get('/:lecturerId/schedule', async (req: Request, res: Response) => {
         const { lecturerId } = req.params;
         const { startingDate, endDate } = req.query;
@@ -65,6 +66,7 @@ export function createLecturerRoute(db: DB) {
         console.log(lecturerSchedule);
 
     });
+    //This API insert a nwe lecturer to the Database
     router.post("/", async (req, res) => {
         try {
             const lecturer = validateLecturer(req.body)
@@ -75,7 +77,7 @@ export function createLecturerRoute(db: DB) {
             res.status(400).json({ status: "invalid input" })
         }
     })
-
+//This API associates the course with the lecturer
     router.post('/:lecturerId/course/:courseId', async (req: Request, res: Response) => {
         const { courseId, lecturerId } = req.params;
 
@@ -96,7 +98,8 @@ export function createLecturerRoute(db: DB) {
 
     });
 
-
+    
+//This API delete a lecturer from the database
     router.delete("/:lecturerId", async (req, res) => {
         try {
             const lecturerId = isUUID(req.params.lecturerId)

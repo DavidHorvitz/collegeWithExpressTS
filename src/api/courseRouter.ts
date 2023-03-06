@@ -15,6 +15,7 @@ export function createCourseRoute(db: DB) {
         }
         res.json(course);
     });
+    
     //get a course with him students 
     courseRouter.get('/:courseId/student/', async (req: Request, res: Response) => {
         const { courseId } = req.params;

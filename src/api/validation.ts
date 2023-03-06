@@ -16,3 +16,4 @@ export function validateLecturer(input: Lecturer.Lecturer): Omit<Lecturer.Lectur
     }
 }
 // import { validate } from 'uuid-validate';
+

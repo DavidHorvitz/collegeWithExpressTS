@@ -34,8 +34,8 @@ export function createStudentRoute(db: DB) {
             res.status(200).json({ status: 'get student with his courses succeeded !' });
         }
         console.log(student);
-
     });
+
     studentRouter.get('/:studentId/course/current', async (req: Request, res: Response) => {
         const { studentId } = req.params;
 
@@ -53,6 +53,8 @@ export function createStudentRoute(db: DB) {
         console.log(student);
 
     });
+
+
     studentRouter.get('/:studentId/course/history', async (req: Request, res: Response) => {
         const { studentId } = req.params;
 

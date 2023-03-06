@@ -11,6 +11,7 @@ export function createClassDateRoute(db: DB) {
         }
         res.json(classDate);
     });
+    
     classDateRouter.post('/:classDateId/lecturer/:lecturerId', async (req: Request, res: Response) => {
         const { classDateId, lecturerId } = req.params;
 

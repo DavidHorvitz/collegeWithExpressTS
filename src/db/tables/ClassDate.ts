@@ -96,11 +96,6 @@ export async function createClassDateTable(sequelize: Sequelize,
                 where: { Id: lecturerId },
                 include: [
                     {
-                        model: ClassDateSchema,
-                        attributes: ['RoomId', 'StartHour', 'EndHour', 'EntryInSyllabus'],
-
-                    },
-                    {
                         model: Course,
                         attributes: ['CourseName'],
                         where: {
@@ -108,8 +103,11 @@ export async function createClassDateTable(sequelize: Sequelize,
                             EndDate: { [Op.lte]: endDate, },
                         }
                     },
+                    {
+                        model: ClassDateSchema,
+                        attributes: ['RoomId', 'StartHour', 'EndHour', 'EntryInSyllabus'],
 
-
+                    },
                 ],
             });
             if (!classDate) {

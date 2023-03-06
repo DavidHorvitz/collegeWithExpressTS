@@ -27,3 +27,4 @@ export interface Course {
     ClassDates?: Array<ClassDate>;
     Syllabus?: Array<Syllabus>
 }
+
