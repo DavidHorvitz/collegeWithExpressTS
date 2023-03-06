@@ -82,7 +82,7 @@ export function createLecturerRoute(db: DB) {
         const { courseId, lecturerId } = req.params;
 
         if (!isUUID(courseId)) {
-            return res.status(400).json({ error: 'Invalid courseId parameter' });
+            return res.status(400).json({ error: 'Invalid courseId parameter'  });
         }
         if (!isUUID(lecturerId)) {
             return res.status(400).json({ error: 'Invalid lecturerId parameter' });
@@ -98,7 +98,7 @@ export function createLecturerRoute(db: DB) {
 
     });
 
-    
+
 //This API delete a lecturer from the database
     router.delete("/:lecturerId", async (req, res) => {
         try {

@@ -110,6 +110,7 @@ Accept-Language: en-us
 ###
 
  GET  http://localhost:8080/course/:courseId HTTP/1.1 
+ GET  http://localhost:8080/course/:courseId HTTP/1.1 
 
 ###
 
