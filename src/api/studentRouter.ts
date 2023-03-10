@@ -35,7 +35,7 @@ export function createStudentRoute(db: DB) {
         }
         console.log(student);
     });
-
+    //get student with current courses
     studentRouter.get('/:studentId/course/current', async (req: Request, res: Response) => {
         const { studentId } = req.params;
 
@@ -54,7 +54,7 @@ export function createStudentRoute(db: DB) {
 
     });
 
-
+    //get a student with courses history
     studentRouter.get('/:studentId/course/history', async (req: Request, res: Response) => {
         const { studentId } = req.params;
 
@@ -72,6 +72,28 @@ export function createStudentRoute(db: DB) {
         console.log(student);
 
     });
+    //This API gets a schedule for a specific Student by ID between certain dates
+    studentRouter.get('/:studentId/schedule', async (req: Request, res: Response) => {
+        const { studentId } = req.params;
+        const { startDate, endDate } = req.query;
+
+        const startingDateObj = startDate ? new Date(startDate.toString()) :new Date();
+        const endDateObj = endDate ? new Date(endDate.toString()):new Date();
+
+        if (!isUUID(studentId)) {
+            return res.status(400).json({ error: 'Invalid studentId parameter' });
+        }
+        const studentSchedule = await db.CourseStudent.gettingStudentScheduleBetweenDates(studentId, startingDateObj, endDateObj);
+        if (!studentSchedule) {
+            res.status(404).json({ status: 'not found' });
+        }
+        else {
+            res.status(200).json({ status: 'gettingStudentScheduleBetweenDates function  succeeded !', student: studentSchedule });
+        }
+        console.log(studentSchedule);
+
+    });
+
     studentRouter.delete('/:studentId', async (req: Request, res: Response) => {
         const studentId = req.params.studentId;
 

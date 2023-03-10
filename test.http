@@ -1,5 +1,5 @@
  
-GET http://localhost:8080/student/8b7ceea3-e5c8-45ac-be7d-06430652459d/course/ HTTP/1.1
+GET http://localhost:8080/student/13f65552-470e-402b-9e74-24204d29911a/course/ HTTP/1.1
     'Content-Type': 'application/json',
     'Accept': 'application/json'
     ###
@@ -18,7 +18,11 @@ GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/b
     'Content-Type': 'application/json',
     'Accept': 'application/json'
 ###
-GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/schedule?startDate=2000-01-01&endDate=2025-06-07 HTTP/1.1
+GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/schedule?startDate=2000-01-01&endDate=2030-06-07 HTTP/1.1
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+###    
+GET http://localhost:8080/student/13f65552-470e-402b-9e74-24204d29911a/schedule?startDate=2000-01-01&endDate=2030-04-02 HTTP/1.1
     'Content-Type': 'application/json',
     'Accept': 'application/json'
 ###
@@ -29,12 +33,12 @@ GET http://localhost:8080/course/8e5c07fe-a99c-4093-8b33-550224c99b91/student/ H
 ###
 POST http://localhost:8080/course/adb09d5a-6af6-418f-a592-360fbe950722/student/13f65552-470e-402b-9e74-24204d29911a HTTP/1.1
 ###
-POST http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/adb09d5a-6af6-418f-a592-360fbe950722 HTTP/1.1
+POST http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/4b133dde-09e3-4a6d-a682-ac6910cc96d9 HTTP/1.1
 ###
-POST http://localhost:8080/classDate/187b4731-108c-4946-8b30-d5eba05bea2e/lecturer/48d2b743-536e-4499-abca-613deb64e4a3 HTTP/1.1
+POST http://localhost:8080/classDate/60fbb64c-23a2-44e4-9fa6-b928fa95fdf4/lecturer/48d2b743-536e-4499-abca-613deb64e4a3 HTTP/1.1
 
 ###c2301afa-1425-4155-92f2-7ae04a98737f
-POST http://localhost:8080/classDate/e4bda376-c356-4862-8a7e-34e11b71cc56/course/da122aa8-016f-4c93-8743-22a17cc87364 HTTP/1.1
+POST http://localhost:8080/classDate/6227474b-5a3a-4184-ae67-4818cbed0534/course/4b133dde-09e3-4a6d-a682-ac6910cc96d9 HTTP/1.1
 
 
 ###
@@ -99,17 +103,16 @@ Accept-Language: en-us
 
 
  {
-    "CourseName":"Client",
-    "StartingDate": "2022-01-01",
-    "EndDate": "2022-09-01",
-    "MinimumPassingScore" :10,
+    "CourseName":"AWS",
+    "StartingDate": "2023-01-01",
+    "EndDate": "2024-09-01",
+    "MinimumPassingScore" :11,
      "MaximumStudents": 30,
     "IsReady":true
  }
 
 ###
 
- GET  http://localhost:8080/course/:courseId HTTP/1.1 
  GET  http://localhost:8080/course/:courseId HTTP/1.1 
 
 ###
@@ -121,10 +124,10 @@ Accept-Language: en-us
 
 
  {
-   "StartHour":"08:00:00",
+   "StartHour":"07:00:00",
    "EndHour":"09:00:00",
-   "RoomId":"3",
-   "EntryInSyllabus":"ש3333"
+   "RoomId":"8",
+   "EntryInSyllabus":"Testsssss"
 
 
  }

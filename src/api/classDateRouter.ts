@@ -38,7 +38,7 @@ export function createClassDateRoute(db: DB) {
             return res.status(400).json({ error: 'Invalid classDateId parameter' });
         }
         if (!isUUID(courseId)) {
-            return res.status(400).json({ error: 'Invalid lecturerId parameter' });
+            return res.status(400).json({ error: 'Invalid courseId parameter' });
         }
         const classDate: any = await db.ClassDate.addClassDateToCourse(courseId, classDateId);
         if (!classDate) {

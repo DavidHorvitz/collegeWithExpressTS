@@ -47,9 +47,9 @@ export function createLecturerRoute(db: DB) {
     //This API gets a schedule for a specific lecturer by ID between certain dates
     router.get('/:lecturerId/schedule', async (req: Request, res: Response) => {
         const { lecturerId } = req.params;
-        const { startingDate, endDate } = req.query;
+        const { startDate, endDate } = req.query;
 
-        const startingDateObj = startingDate ? new Date(startingDate.toString()) : new Date();
+        const startingDateObj = startDate ? new Date(startDate.toString()) : new Date();
         const endDateObj = endDate ? new Date(endDate.toString()) : new Date();
 
         if (!isUUID(lecturerId)) {
@@ -68,7 +68,7 @@ export function createLecturerRoute(db: DB) {
     });
     //This API insert a nwe lecturer to the Database
     router.post("/", async (req, res) => {
-        try {
+        try {``
             const lecturer = validateLecturer(req.body)
             const result = await db.Lecturer.insert(lecturer);
             res.status(201).json({ status: "created", data: result })

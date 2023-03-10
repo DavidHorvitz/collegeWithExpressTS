@@ -14,7 +14,7 @@ export async function initTables(connection: Sequelize) {
     const student = await createStudentTable(connection);
     const classDate = await createClassDateTable(connection, course.Schema, lecturer.Schema);
     const syllabus = await createSyllabusTable(connection, course.Schema);
-    const courseStudent = await createCourseStudentTable(connection, student.Schema, course.Schema)
+    const courseStudent = await createCourseStudentTable(connection, student.Schema, course.Schema,classDate.Schema)
 
 
     return {

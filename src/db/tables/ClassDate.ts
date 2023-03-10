@@ -89,7 +89,7 @@ export async function createClassDateTable(sequelize: Sequelize,
             }
             await (classDate as any).setCourse(course);
         },
-
+        //This API get for a lecturer the schedule between date 
         async gettingLecturersScheduleBetweenDates(lecturerId, startingDate, endDate) {
             const classDate = await Lecturer.findAll({
                 attributes: ['Name'],
@@ -101,11 +101,14 @@ export async function createClassDateTable(sequelize: Sequelize,
                         where: {
                             StartingDate: { [Op.gte]: startingDate, },
                             EndDate: { [Op.lte]: endDate, },
-                        }
-                    },
-                    {
-                        model: ClassDateSchema,
-                        attributes: ['RoomId', 'StartHour', 'EndHour', 'EntryInSyllabus'],
+                        },
+                        include: [
+                            {
+                                model: ClassDateSchema,
+                                attributes: ['RoomId', 'StartHour', 'EndHour', 'EntryInSyllabus'],
+                                required: true, // Add required option to only include class dates with a linked course
+                            },
+                        ],
 
                     },
                 ],
@@ -115,17 +118,6 @@ export async function createClassDateTable(sequelize: Sequelize,
             }
             const data: any = classDate;
             return data;
-
         },
     };
 }
-// include: [
-//     {
-//         model: Course,
-//         attributes: ['CourseName'],
-//         where: {
-//             StartingDate: { [Op.gte]: startingDate, },
-//             EndDate: { [Op.lte]: endDate, },
-//         },
-//     },
-// ],
