@@ -15,7 +15,7 @@ export function createCourseRoute(db: DB) {
         }
         res.json(course);
     });
-    
+
     //get a course with him students 
     courseRouter.get('/:courseId/student/', async (req: Request, res: Response) => {
         const { courseId } = req.params;
@@ -29,10 +29,9 @@ export function createCourseRoute(db: DB) {
             res.status(404).json({ status: 'not found' });
         }
         else {
-            res.status(200).json({ status: 'get course with his students succeeded !' });
+            res.status(200).json({ status: 'get course with his students succeeded !', course });
         }
         console.log(course);
-        // res.json(course)
 
     });
     //find course by name (http://localhost:8080/course?course_name=mos)
@@ -58,7 +57,7 @@ export function createCourseRoute(db: DB) {
         }
         res.json(course);
     })
-    
+
     //This function adds a student to the course by adding the two PKs to the courseStudent linking table
     courseRouter.post('/:courseId/student/:studentId', async (req: Request, res: Response) => {
         const { courseId, studentId } = req.params;
@@ -74,9 +73,24 @@ export function createCourseRoute(db: DB) {
             res.status(404).json({ status: 'not found' });
         }
         else {
-            res.status(200).json({ status: 'student adding to course is success !' });
+            res.status(200).json({ status: 'student adding to course is success !', course });
         }
-        res.json(course);
+        console.log(course);
+
+    });
+    //This function adds a syllabus to the course by adding the two PKs to the courseStudent linking table
+    courseRouter.post('/:courseId/syllabus/:syllabusId', async (req: Request, res: Response) => {
+        const { courseId, syllabusId } = req.params;
+
+        if (!isUUID(courseId)) {
+            return res.status(400).json({ error: 'Invalid courseId parameter' });
+        }
+        if (!isUUID(syllabusId)) {
+            return res.status(400).json({ error: 'Invalid syllabusId parameter' });
+        }
+        const course = await db.Syllabus.addSyllabusToCourse(syllabusId, courseId);
+        res.status(200).json({ status: 'syllabus adding to course is success !', course: course });
+
         console.log(course);
 
     });
@@ -99,18 +113,7 @@ export function createCourseRoute(db: DB) {
 
 
     //DELETE
-    //Remove course by id 
-    // courseRouter.delete('/:courseId', async (req: Request, res: Response) => {
-    //     const courseId = req.params.courseId;
-    //     const course = await db.Course.deleteCourseById(courseId);
-    //     console.log(course);
-    //     if (course) {
-    //         res.status(200).json({ status: "deleted" })
-    //     } else {
-    //         res.status(404).json({ status: "not found" })
-    //     }
-    //     res.json(course);
-    // });
+
     courseRouter.delete('/:courseId', async (req: Request, res: Response) => {
         const courseId = req.params.courseId;
 
@@ -125,6 +128,25 @@ export function createCourseRoute(db: DB) {
         } else {
             return res.status(404).json({ status: 'not found' });
         }
+    });
+    courseRouter.delete('/:courseId/syllabus/:syllabusId', async (req: Request, res: Response) => {
+        const { courseId, syllabusId } = req.params;
+
+        if (!isUUID(courseId)) {
+            return res.status(400).json({ error: 'Invalid courseId parameter' });
+        }
+        if (!isUUID(syllabusId)) {
+            return res.status(400).json({ error: 'Invalid syllabusId parameter' });
+        }
+        const course = await db.Syllabus.deleteSyllabusFromCourse(syllabusId, courseId);
+        if (course) {
+            res.status(202).json({ status: 'deleted' });
+        }
+        else {
+            res.status(404).json({ status: 'not found', course });
+        }
+        console.log(course);
+
     });
     return courseRouter;
 }

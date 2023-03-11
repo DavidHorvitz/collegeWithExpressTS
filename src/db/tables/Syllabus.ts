@@ -8,6 +8,8 @@ export interface SyllabusInterface {
     Schema: ModelStatic<SyllabusSchemaModel>
     insert: (syllabus: Omit<AppModel.Course.Syllabus, "Id">) => Promise<AppModel.Course.Syllabus>
     delete: (syllabus: string) => Promise<boolean>
+    addSyllabusToCourse: (syllabusId: string, courseId: string) => Promise<void | undefined>
+    deleteSyllabusFromCourse: (syllabusId: string, courseId: string) => Promise<void | undefined>
 }
 
 export async function createSyllabusTable(sequelize: Sequelize, Course: CourseInterface["Schema"]): Promise<SyllabusInterface> {
@@ -43,6 +45,7 @@ export async function createSyllabusTable(sequelize: Sequelize, Course: CourseIn
             const result = await SyllabusSchema.create(syllabus as AppModel.Course.Syllabus)
             return result.toJSON();
         },
+
         async delete(syllabusId) {
             const result = await SyllabusSchema.destroy({
                 where: {
@@ -51,5 +54,24 @@ export async function createSyllabusTable(sequelize: Sequelize, Course: CourseIn
             })
             return result === 1;
         },
-    };
+        async addSyllabusToCourse(syllabusId: string, courseId: string) {
+
+            const course = await Course.findByPk(courseId);
+            const syllabus = await SyllabusSchema.findByPk(syllabusId);
+            if (!course || !syllabus) {
+                throw new Error('Course or syllabus not found');
+            }
+            await (course as any).addSyllabus(syllabus);
+
+        },
+        async deleteSyllabusFromCourse(syllabusId: string, courseId: string) {
+            const course = await Course.findByPk(courseId);
+            const syllabus = await SyllabusSchema.findByPk(syllabusId); 
+
+            if (!course || !syllabus) {
+                throw new Error('Course or syllabus not found');
+            }
+            await (course as any).removeSyllabus(syllabus); // remove the syllabus from the course
+        }
+    }
 }

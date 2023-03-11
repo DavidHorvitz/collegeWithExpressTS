@@ -42,11 +42,11 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                 where: {
                     Id: courseId,
                 },
-                attributes: ['Course_name', 'Starting_date', 'End_date'],
+                attributes: ['CourseName', 'StartingDate', 'EndDate'],
                 include: [
                     {
                         model: Student,
-                        attributes: ['Name', 'Phone_number', 'Email'],
+                        attributes: ['Name', 'PhoneNumber', 'Email'],
 
                     }
                 ]
@@ -146,9 +146,9 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
             await (course as any).addStudent(student);
 
         },
+        
         async gettingStudentScheduleBetweenDates(studentId, startDate, endDate) {
-            const student = await Student.findAll({
-                where: { Id: studentId },
+            const student = await Student.findByPk(studentId,{
                 attributes: ['Name', 'Id'],
                 include: [{
                     model: Course,
