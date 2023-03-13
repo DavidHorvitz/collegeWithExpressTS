@@ -89,7 +89,6 @@ export async function createClassDateTable(sequelize: Sequelize,
             }
             await (classDate as any).setCourse(course);
         },
-        //This API get for a lecturer the schedule between date 
         async gettingLecturersScheduleBetweenDates(lecturerId, startDate, endDate) {
             const classDate = await Lecturer.findByPk(lecturerId,{
                 attributes: ['Name'],

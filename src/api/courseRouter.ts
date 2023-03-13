@@ -108,12 +108,32 @@ export function createCourseRoute(db: DB) {
         res.json(course);
         console.log(course);
     })
+    courseRouter.put('/:courseId', async (req: Request, res: Response) => {
+        const { courseId } = req.params;
+        const course = await db.Course.addLectureDataEntryToCourse(courseId, req.body);
+        if (!course) {
+            res.status(404).json({ course: "Not Found" })
+        }
+        res.status(404).json({ status: "Successes", course })
 
+        console.log(course);
+    });
+    //This API removing the lecture date entry for course
+    courseRouter.put('/:courseId/lecture-delete-data', async (req: Request, res: Response) => {
+        const { courseId } = req.params;
+        console.log(courseId, "test before course is deleted ROUTER");
 
-
+        const course = await db.Course.deleteLectureDataEntryFromCourse(courseId, req.body);
+        console.log(courseId, "test after delete ROUTER");
+        if (!course) {
+            res.status(404).json({ course: "Not Found" })
+        } else {
+            res.status(200).json(course);
+        }
+    });
 
     //DELETE
-
+    //This API is delete a course by its Id
     courseRouter.delete('/:courseId', async (req: Request, res: Response) => {
         const courseId = req.params.courseId;
 
@@ -129,6 +149,7 @@ export function createCourseRoute(db: DB) {
             return res.status(404).json({ status: 'not found' });
         }
     });
+//This API removing the syllabus date entry for course
     courseRouter.delete('/:courseId/syllabus/:syllabusId', async (req: Request, res: Response) => {
         const { courseId, syllabusId } = req.params;
 
@@ -148,5 +169,6 @@ export function createCourseRoute(db: DB) {
         console.log(course);
 
     });
+
     return courseRouter;
 }

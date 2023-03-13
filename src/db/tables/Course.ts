@@ -10,7 +10,7 @@ type CourseSchemaModel = Model<Course>
 
 export interface CourseInterface {
     Schema: ModelStatic<CourseSchemaModel>
-    insert: (course: Omit<Course, "Id">) => Promise<Course>
+    insert: (course: Partial<Course>) => Promise<Course>
     delete: (courseId: string) => Promise<boolean>
     searchById: (id: string) => Promise<AppModel.Course.Course | undefined>
     searchByName: (course_name: string) => Promise<AppModel.Course.Course | undefined>
@@ -18,6 +18,9 @@ export interface CourseInterface {
     getLecturerWithCurrentCourses: (lecturerId: string) => Promise<string>
     getLecturerWithBetweenDates: (lecturerId: string, startDate: Date, endDate: Date) => Promise<string | undefined>
     addCourseToLecturer: (lecturerId: string, courseId: string) => Promise<void | undefined>
+    addLectureDataEntryToCourse: (courseId: string, updates: Pick<Course, "StartingDate" | "EndDate">) => Promise<AppModel.Course.Course | undefined>
+    deleteLectureDataEntryFromCourse: (courseId: string, updates: Pick<Course, "StartingDate" | "EndDate">) => Promise<AppModel.Course.Course | undefined>
+
 }
 
 export async function createCourseTable(sequelize: Sequelize, Lecturer: LecturerInterface["Schema"]): Promise<CourseInterface> {
@@ -33,23 +36,23 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
         },
         StartingDate: {
             type: DataTypes.DATEONLY,
-            allowNull: false
+            allowNull: true
         },
         EndDate: {
             type: DataTypes.DATEONLY,
-            allowNull: false
+            allowNull: true
         },
         MinimumPassingScore: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: true
         },
         MaximumStudents: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: true
         },
         IsReady: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: true
         }
     }, {
         schema: "college",
@@ -95,6 +98,48 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
                 });
                 if (rowsAffected > 0) {
                     return updatedCourse.toJSON() as any
+                } else {
+                    return undefined;
+                }
+            } catch (error) {
+                console.error(error);
+                return undefined;
+            }
+        },
+        async addLectureDataEntryToCourse(courseId, updates) {
+            try {
+                const [rowsAffected, [updatedCourse]] = await CourseSchema.update(updates, {
+                    where: {
+                        Id: courseId,
+                    },
+                    returning: true, // Return the updated record
+                    //   plain: true, // Return only the updated record (without metadata)
+                });
+                if (rowsAffected > 0) {
+                    return updatedCourse.toJSON() as any
+                } else {
+                    return undefined;
+                }
+            } catch (error) {
+                console.error(error);
+                return undefined;
+            }
+        },
+        async deleteLectureDataEntryFromCourse(courseId, updates) {
+            try {
+                const { StartingDate, EndDate } = updates;
+                console.log(`StartingDate${StartingDate} EndDate ${EndDate} in the Function before`);
+
+                const [rowsAffected, [updatedCourse]] = await CourseSchema.update(
+                    { StartingDate, EndDate },
+                    {
+                        where: { Id: courseId },
+                        returning: true, // Return the updated record
+                    }
+                );
+                console.log(`StartingDate${StartingDate} EndDate ${EndDate} in the Function after !!!!`);
+                if (rowsAffected > 0) {
+                    return updatedCourse.toJSON() as AppModel.Course.Course;
                 } else {
                     return undefined;
                 }
