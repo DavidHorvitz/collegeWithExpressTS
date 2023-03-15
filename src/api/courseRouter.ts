@@ -5,10 +5,13 @@ import { isUUID } from "./validation";
 export function createCourseRoute(db: DB) {
     const courseRouter = express.Router();
     //GET
-    //find by ID (http://localhost:8080/course/e0cf2c14-4516-495f-ba2e-ebad798a8d95)
-    courseRouter.get('/:courseId', async (req: Request, res: Response) => {
+    //find by ID with details(http://localhost:8080/course/e0cf2c14-4516-495f-ba2e-ebad798a8d95/details)
+    courseRouter.get('/:courseId/', async (req: Request, res: Response) => {
         const courseId = req.params.courseId;
-        const course = await db.Course.searchById(courseId);
+        const includeDetails = req.query.course as string;
+        const course = await db.Course.searchByIdWithDetails(courseId, includeDetails);
+        console.log(JSON.stringify(course));
+        
         console.log(course);
         if (!course) {
             res.status(404).json({ course: "Not Found" })
@@ -149,7 +152,7 @@ export function createCourseRoute(db: DB) {
             return res.status(404).json({ status: 'not found' });
         }
     });
-//This API removing the syllabus date entry for course
+    //This API removing the syllabus date entry for course
     courseRouter.delete('/:courseId/syllabus/:syllabusId', async (req: Request, res: Response) => {
         const { courseId, syllabusId } = req.params;
 
