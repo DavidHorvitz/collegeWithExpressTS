@@ -12,6 +12,14 @@ export function createStudentRoute(db: DB) {
         }
         res.json(student)
     })
+    //This get the all students
+    studentRouter.get('/', async (req: Request, res: Response) => {
+        const student = await db.Student.getAllStudent();
+        if (!student) {
+            res.status(404).json({ status: "Not Found some students !" })
+        }
+        res.json(student)
+    })
     //Note that I removed :studentId from the route path as it is not required for creating a new course
     studentRouter.post('/', async (req: Request, res: Response) => {
         const student = await db.Student.insert(req.body);
@@ -77,8 +85,8 @@ export function createStudentRoute(db: DB) {
         const { studentId } = req.params;
         const { startDate, endDate } = req.query;
 
-        const startingDateObj = startDate ? new Date(startDate.toString()) :new Date();
-        const endDateObj = endDate ? new Date(endDate.toString()):new Date();
+        const startingDateObj = startDate ? new Date(startDate.toString()) : new Date();
+        const endDateObj = endDate ? new Date(endDate.toString()) : new Date();
 
         if (!isUUID(studentId)) {
             return res.status(400).json({ error: 'Invalid studentId parameter' });

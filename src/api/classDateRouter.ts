@@ -5,13 +5,22 @@ import { isUUID } from "./validation";
 export function createClassDateRoute(db: DB) {
     const classDateRouter = express.Router();
     classDateRouter.post('/', async (req: Request, res: Response) => {
-        const classDate = await db.ClassDate.insert(req.body);
+        const classDate = await db.ClassDate.createClassDateWithRoom(req.body);
         if (!classDate) {
             res.status(404).json({ course: "Not Found" })
         }
         res.json(classDate);
     });
-    
+    // export function createClassDateRoute(db: DB) {
+    //     const classDateRouter = express.Router();
+    //     classDateRouter.post('/', async (req: Request, res: Response) => {
+    //         const classDate = await db.ClassDate.insert(req.body);
+    //         if (!classDate) {
+    //             res.status(404).json({ course: "Not Found" })
+    //         }
+    //         res.json(classDate);
+    //     });
+
     classDateRouter.post('/:classDateId/lecturer/:lecturerId', async (req: Request, res: Response) => {
         const { classDateId, lecturerId } = req.params;
 
@@ -50,6 +59,22 @@ export function createClassDateRoute(db: DB) {
         console.log(classDate);
 
     });
+    classDateRouter.post('/class-date-with-room', async (req: Request, res: Response) => {
+        const { classDateWithRoom } = req.body;
+        console.log(classDateWithRoom);
+        
 
+        try {
+            const classDate: any = await db.ClassDate.createClassDateWithRoom(classDateWithRoom);
+            if (!classDate) {
+                res.status(404).json({ status: 'not found' });
+            }
+            else {
+                res.status(200).json({ status: 'course adding to classDate is success !' });
+            }
+            console.log(classDate);
+        } catch (error) {
+        }
+    });
     return classDateRouter;
 }

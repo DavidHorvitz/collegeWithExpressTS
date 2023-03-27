@@ -1,9 +1,12 @@
-
+export interface Room {
+    Id: string,
+    ClassNumber: number
+}
 export interface ClassDate {
     Id: string;
     StartHour: Date;
     EndHour: Date;
-    RoomId: string;
+    RoomId: Array<Room>;
     EntryInSyllabus: string;
     LecturerId?: string;
 }

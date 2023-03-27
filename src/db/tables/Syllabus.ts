@@ -1,3 +1,4 @@
+import { Console } from "console";
 import { Sequelize, DataTypes, Model, ModelStatic } from "sequelize";
 import * as AppModel from "../../model/mainModels";
 import { CourseInterface } from "./Course";
@@ -10,6 +11,7 @@ export interface SyllabusInterface {
     delete: (syllabus: string) => Promise<boolean>
     addSyllabusToCourse: (syllabusId: string, courseId: string) => Promise<void | undefined>
     deleteSyllabusFromCourse: (syllabusId: string, courseId: string) => Promise<void | undefined>
+
 }
 
 export async function createSyllabusTable(sequelize: Sequelize, Course: CourseInterface["Schema"]): Promise<SyllabusInterface> {
@@ -66,12 +68,14 @@ export async function createSyllabusTable(sequelize: Sequelize, Course: CourseIn
         },
         async deleteSyllabusFromCourse(syllabusId: string, courseId: string) {
             const course = await Course.findByPk(courseId);
-            const syllabus = await SyllabusSchema.findByPk(syllabusId); 
+            const syllabus = await SyllabusSchema.findByPk(syllabusId);
 
             if (!course || !syllabus) {
                 throw new Error('Course or syllabus not found');
             }
             await (course as any).removeSyllabus(syllabus); // remove the syllabus from the course
-        }
+        },
+
     }
 }
+

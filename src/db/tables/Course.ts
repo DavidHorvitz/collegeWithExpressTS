@@ -20,7 +20,6 @@ export interface CourseInterface {
     addCourseToLecturer: (lecturerId: string, courseId: string) => Promise<void | undefined>
     addLectureDataEntryToCourse: (courseId: string, updates: Pick<Course, "StartingDate" | "EndDate">) => Promise<AppModel.Course.Course | undefined>
     deleteLectureDataEntryFromCourse: (courseId: string, updates: Pick<Course, "StartingDate" | "EndDate">) => Promise<AppModel.Course.Course | undefined>
-    routeForSettingTheCourseToReady: (courseId: string, updates: Omit<Course, "IsReady">) => Promise<AppModel.Course.Course | undefined>
 
 }
 
@@ -129,44 +128,7 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
                 return undefined;
             }
         },
-        async routeForSettingTheCourseToReady(courseId, updates) {
-            try {
-                const result = await CourseSchema.findByPk(courseId);
-                if (!result) {
-                    console.log('Course not found');
-                    return undefined;
-                }
-
-                const data: any = result.toJSON();
-                const { CourseName, StartingDate, EndDate, MinimumPassingScore, MaximumStudents } = data;
-
-                if (!CourseName || !StartingDate || !EndDate || !MinimumPassingScore || !MaximumStudents) {
-                    return {
-                        error: "Course information is not set properly. Please set all fields."
-                    };
-                }
-
-                const [rowsAffected, [updatedCourse]] = await CourseSchema.update({
-                    ...updates,
-                    IsReady: true
-                }, {
-                    where: {
-                        Id: courseId,
-                    },
-                    returning: true
-                });
-
-                if (rowsAffected > 0) {
-                    return updatedCourse.toJSON() as any;
-                } else {
-                    return undefined;
-                }
-            } catch (error) {
-                console.error(error);
-                return undefined;
-            }
-        },
-
+      
         async addLectureDataEntryToCourse(courseId, updates) {
             try {
                 const [rowsAffected, [updatedCourse]] = await CourseSchema.update(updates, {
