@@ -21,9 +21,15 @@ export function createStudentRoute(db: DB) {
         res.json(student)
     })
     //Note that I removed :studentId from the route path as it is not required for creating a new course
-    studentRouter.post('/', async (req: Request, res: Response) => {
+    studentRouter.post('/add-student', async (req: Request, res: Response) => {
         const student = await db.Student.insert(req.body);
-        res.json(student);
+        if (!student) {
+            res.status(400).json({ error: 'Invalid student data' });
+        }
+        else {
+            res.status(200).json(student);
+        }
+        // console.log(student);
     })
 
     //GET student with him courses with data checked
@@ -101,16 +107,27 @@ export function createStudentRoute(db: DB) {
         console.log(studentSchedule);
 
     });
+    //This Api updates the student by Id
+    studentRouter.put('/edit-student/:studentId', async (req: Request, res: Response) => {
+        const { studentId } = req.params;
+        const student = await db.Student.updateStudentById(studentId, req.body);
+        if (!student) {
+            res.status(400).json({ error: 'Invalid student data' });
+        }
+        else {
+            res.status(200).json(student);
+        }
+    });
 
-    studentRouter.delete('/:studentId', async (req: Request, res: Response) => {
-        const studentId = req.params.studentId;
+    studentRouter.delete('/delete-student/:studentId', async (req: Request, res: Response) => {
+        const { studentId } = req.params;
 
         // check if courseId is a valid UUID
         if (!isUUID(studentId)) {
             return res.status(400).json({ error: 'Invalid courseId parameter' });
         }
 
-        const student = await db.Course.delete(studentId);
+        const student = await db.Student.delete(studentId);
         if (student) {
             return res.status(200).json({ status: 'deleted' });
         } else {

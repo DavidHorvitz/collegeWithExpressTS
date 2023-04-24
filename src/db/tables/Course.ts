@@ -11,6 +11,7 @@ type CourseSchemaModel = Model<Course>
 export interface CourseInterface {
     Schema: ModelStatic<CourseSchemaModel>
     insert: (course: Partial<Course>) => Promise<Course>
+    getAllCourses: () => Promise<AppModel.Course.Course[] | undefined>
     delete: (courseId: string) => Promise<boolean>
     searchByIdWithDetails: (id: string, details: string) => Promise<AppModel.Course.Course | undefined>
     searchByName: (course_name: string) => Promise<AppModel.Course.Course | undefined>
@@ -67,6 +68,22 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
         async insert(course) {
             const result = await CourseSchema.create(course as Course)
             return result.toJSON();
+        },
+        async getAllCourses(): Promise<AppModel.Course.Course[] | undefined> {
+            const results = await CourseSchema.findAll();
+            if (results.length === 0) {
+                return undefined;
+            }
+            const courses: AppModel.Course.Course[] = results.map((result: any) => ({
+                Id: result.Id,
+                CourseName: result.CourseName,
+                StartingDate: result.StartingDate,
+                EndDate: result.EndDate,
+                MinimumPassingScore: result.MinimumPassingScore,
+                MaximumStudents: result.MaximumStudents,
+                IsReady: result.IsReady,
+            }));
+            return courses;
         },
         async delete(courseId) {
             const result = await CourseSchema.destroy({
@@ -128,7 +145,7 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
                 return undefined;
             }
         },
-      
+
         async addLectureDataEntryToCourse(courseId, updates) {
             try {
                 const [rowsAffected, [updatedCourse]] = await CourseSchema.update(updates, {

@@ -68,7 +68,15 @@ Accept-Language: en-us
   "EndDate": "2023-11-01"
 }
 ###
+PUT http://localhost:8080/student/edit-student/a5f32e31-a04c-4a1f-82b0-aecad34b6616  HTTP/1.1
+ Content-Type: application/json
+Accept-Language: en-us
 
+{
+  "Name":"0000-----",
+   "PhoneNumber":"Weeee",
+   "Email":"Weeee"
+}
 ###
 PUT http://localhost:8080/course/d12f8cdf-2eef-46f5-8f4c-36e3a8d85d99/lecture-delete-data HTTP/1.1
 Content-Type: application/json
@@ -91,13 +99,13 @@ Accept-Language: en-us
 #  }
 
 ###
- POST  http://localhost:8080/student/ HTTP/1.1 
+ POST  http://localhost:8080/student/add-student HTTP/1.1 
  Content-Type: application/json
  Accept-Language: en-us
 
 
  {
-   "Name":"Success ",
+   "Name":"V",
    "PhoneNumber":"01134343434",
    "Email":"malid@ami.org.il"
  }

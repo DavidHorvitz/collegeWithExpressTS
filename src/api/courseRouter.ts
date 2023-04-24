@@ -5,6 +5,15 @@ import { isUUID } from "./validation";
 export function createCourseRoute(db: DB) {
     const courseRouter = express.Router();
     //GET
+    //This get the all Courses
+    courseRouter.get('/', async (req: Request, res: Response) => {
+        const course = await db.Course.getAllCourses();
+        if (!course) {
+            res.status(404).json({ status: "Not Found some Courses !" })
+        }
+        res.json(course)
+    })
+
     //find by ID with details(http://localhost:8080/course/e0cf2c14-4516-495f-ba2e-ebad798a8d95/details)
     courseRouter.get('/:courseId/', async (req: Request, res: Response) => {
         const courseId = req.params.courseId;
