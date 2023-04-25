@@ -21,7 +21,7 @@ export function createStudentRoute(db: DB) {
         res.json(student)
     })
     //Note that I removed :studentId from the route path as it is not required for creating a new course
-    studentRouter.post('/', async (req: Request, res: Response) => {
+    studentRouter.post('/add-student', async (req: Request, res: Response) => {
         const student = await db.Student.insert(req.body);
         res.json(student);
     })
