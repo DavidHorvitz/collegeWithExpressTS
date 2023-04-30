@@ -9,6 +9,8 @@ export interface StudentInterface {
     search: (id: string) => Promise<AppModel.Student.Student | undefined>
     getAllStudent: () => Promise<AppModel.Student.Student[] | undefined>
     delete: (studentId: string) => Promise<boolean>
+    updateStudentById: (studentId: string, updates: Partial<AppModel.Student.Student>) => Promise<AppModel.Student.Student | undefined>
+
 }
 
 export async function createStudentTable(sequelize: Sequelize): Promise<StudentInterface> {
@@ -47,21 +49,21 @@ export async function createStudentTable(sequelize: Sequelize): Promise<StudentI
             const result = await StudentSchema.findByPk(id)
             return result?.toJSON();
         },
+        
         async getAllStudent(): Promise<AppModel.Student.Student[] | undefined> {
             const results = await StudentSchema.findAll();
             if (results.length === 0) {
-              return undefined;
+                return undefined;
             }
-          
             const students: AppModel.Student.Student[] = results.map((result: any) => ({
-              Id: result.Id,
-              Name: result.Name,
-              PhoneNumber: result.PhoneNumber,
-              Email: result.Email
+                Id: result.Id,
+                Name: result.Name,
+                PhoneNumber: result.PhoneNumber,
+                Email: result.Email
             }));
-          
             return students;
-          },
+        },
+
         async delete(studentId) {
             const result = await StudentSchema.destroy({
                 where: {
@@ -69,6 +71,25 @@ export async function createStudentTable(sequelize: Sequelize): Promise<StudentI
                 }
             })
             return result === 1;
+        },
+        async updateStudentById(studentId: string, updates: Partial<AppModel.Student.Student>) {
+            try {
+                const [rowsAffected, [updatedStudent]] = await StudentSchema.update(updates, {
+                    where: {
+                        Id: studentId,
+                    },
+                    returning: true, // Return the updated record
+                    //   plain: true, // Return only the updated record (without metadata)
+                });
+                if (rowsAffected > 0) {
+                    return updatedStudent.toJSON() as any
+                } else {
+                    return undefined;
+                }
+            } catch (error) {
+                console.error(error);
+                return undefined;
+            }
         },
     };
 }
