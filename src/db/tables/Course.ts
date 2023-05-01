@@ -12,6 +12,7 @@ export interface CourseInterface {
     Schema: ModelStatic<CourseSchemaModel>
     insert: (course: Partial<Course>) => Promise<Course>
     delete: (courseId: string) => Promise<boolean>
+    getAllCourses: () => Promise<AppModel.Course.Course[] | undefined>
     searchByIdWithDetails: (id: string, details: string) => Promise<AppModel.Course.Course | undefined>
     searchByName: (course_name: string) => Promise<AppModel.Course.Course | undefined>
     updateCourseByName: (course_name: string, updates: Partial<AppModel.Course.Course>) => Promise<AppModel.Course.Course | undefined>
@@ -77,6 +78,22 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
             })
             return result === 1;
         },
+        async getAllCourses(): Promise<AppModel.Course.Course[] | undefined> {
+            const results = await CourseSchema.findAll();
+            if (results.length === 0) {
+                return undefined;
+            }
+            const courses: AppModel.Course.Course[] = results.map((result: any) => ({
+                Id: result.Id,
+                CourseName: result.CourseName,
+                StartingDate: result.StartingDate,
+                EndDate: result.EndDate,
+                MinimumPassingScore: result.MinimumPassingScore,
+                MaximumStudents: result.MaximumStudents,
+                IsReady: result.IsReady
+            }));
+            return courses;
+        },
         async searchByIdWithDetails(id: string, details: string | undefined) {
             const result = await CourseSchema.findByPk(id);
 
@@ -128,7 +145,7 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
                 return undefined;
             }
         },
-      
+
         async addLectureDataEntryToCourse(courseId, updates) {
             try {
                 const [rowsAffected, [updatedCourse]] = await CourseSchema.update(updates, {

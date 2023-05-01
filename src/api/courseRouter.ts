@@ -11,14 +11,21 @@ export function createCourseRoute(db: DB) {
         const includeDetails = req.query.course as string;
         const course = await db.Course.searchByIdWithDetails(courseId, includeDetails);
         console.log(JSON.stringify(course));
-        
+
         console.log(course);
         if (!course) {
             res.status(404).json({ course: "Not Found" })
         }
         res.json(course);
     });
-
+    //This get the all courses
+    courseRouter.get('/', async (req: Request, res: Response) => {
+        const course = await db.Course.getAllCourses();
+        if (!course) {
+            res.status(404).json({ status: "Not Found some students !" })
+        }
+        res.status(200).json(course)
+    })
     //get a course with him students 
     courseRouter.get('/:courseId/student/', async (req: Request, res: Response) => {
         const { courseId } = req.params;
@@ -38,7 +45,7 @@ export function createCourseRoute(db: DB) {
 
     });
     //find course by name (http://localhost:8080/course?course_name=mos)
-    courseRouter.get('/', async (req: Request, res: Response) => {
+    courseRouter.get('/s', async (req: Request, res: Response) => {
         const course_name = req.query.course_name as string;
         const course = await db.Course.searchByName(course_name);
         if (!course) {
