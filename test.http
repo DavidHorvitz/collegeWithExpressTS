@@ -31,7 +31,7 @@ GET http://localhost:8080/course/adb09d5a-6af6-418f-a592-360fbe950722/student/ H
     'Accept': 'application/json'
   
 ###
-POST http://localhost:8080/course/adb09d5a-6af6-418f-a592-360fbe950722/student/13f65552-470e-402b-9e74-24204d29911a HTTP/1.1
+POST http://localhost:8080/course/6b4d54b0-4809-4629-8d7a-a9add626353c/student/ace3be01-b99a-4c3a-b5fc-8a3a875630aa HTTP/1.1
 ###
 POST http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/4b133dde-09e3-4a6d-a682-ac6910cc96d9 HTTP/1.1
 ###
@@ -64,7 +64,7 @@ Accept-Language: en-us
 
 
 {
-  "StartingDate": "2023-01-01",
+  "StartingDate": "2023-09-01",
   "EndDate": "2023-11-01"
 }
 ###

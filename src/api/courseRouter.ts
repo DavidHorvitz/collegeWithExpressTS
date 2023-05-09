@@ -60,7 +60,7 @@ export function createCourseRoute(db: DB) {
     //Note that I removed :courseId from the route path as it is not required for creating a new course 
     //you need to pass the Properties in the body of the request
     //insert a new course (http://localhost:8080/course/)
-    courseRouter.post('/', async (req: Request, res: Response) => {
+    courseRouter.post('/add-course', async (req: Request, res: Response) => {
         const course = await db.Course.insert(req.body);
         if (!course) {
             res.status(404).json({ course: "Not Found" })
@@ -83,10 +83,8 @@ export function createCourseRoute(db: DB) {
             res.status(404).json({ status: 'not found' });
         }
         else {
-            res.status(200).json({ status: 'student adding to course is success !', course });
+            res.status(200).json(course);
         }
-        console.log(course);
-
     });
     //This function adds a syllabus to the course by adding the two PKs to the courseStudent linking table
     courseRouter.post('/:courseId/syllabus/:syllabusId', async (req: Request, res: Response) => {
@@ -144,7 +142,7 @@ export function createCourseRoute(db: DB) {
 
     //DELETE
     //This API is delete a course by its Id
-    courseRouter.delete('/:courseId', async (req: Request, res: Response) => {
+    courseRouter.delete('/delete-course/:courseId', async (req: Request, res: Response) => {
         const courseId = req.params.courseId;
 
         // check if courseId is a valid UUID

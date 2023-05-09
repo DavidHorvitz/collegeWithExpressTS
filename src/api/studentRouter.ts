@@ -59,10 +59,10 @@ export function createStudentRoute(db: DB) {
 
         const student = await db.CourseStudent.getStudentWithHimCurrentCourses(studentId);
         if (!student) {
-            res.status(404).json({ status: 'not found' });
+            res.status(404).json({ status: 'No matching student with current courses found' });
         }
         else {
-            res.status(200).json({ status: 'get student with his courses succeeded !' });
+            res.status(200).json(student);
         }
         console.log(student);
 

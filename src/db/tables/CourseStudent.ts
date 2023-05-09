@@ -101,11 +101,14 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                 ]
             });
             if (!result) {
-                throw new Error(' not found student or course');
+                console.log('No matching student with current courses found');
+                return null;
+
             }
             const data: any = result.toJSON();
             return data;
         },
+
         async getStudentWithHimHistoryCourses(studentId) {
             const today = new Date();
             const result = await Student.findOne({
@@ -130,25 +133,39 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
             return data;
         },
         async addStudentToCourse(studentId: string, courseId: string) {
-            // const Course = sequelize.models.course;
-            // const Student = sequelize.models.student;
-
             const course = await Course.findByPk(courseId);
             if (!course) {
-                throw new Error(`Course with ID ${courseId} not found`);
+                return Promise.reject(`Course with ID ${courseId} not found`);
             }
 
             const student = await Student.findByPk(studentId);
             if (!student) {
-                throw new Error(`Student with ID ${studentId} not found`);
+                return Promise.reject(`Student with ID ${studentId} not found`);
             }
 
             await (course as any).addStudent(student);
-
         },
-        
+
+        // async addStudentToCourse(studentId: string, courseId: string) {
+        //     // const Course = sequelize.models.course;
+        //     // const Student = sequelize.models.student;
+
+        //     const course = await Course.findByPk(courseId);
+        //     if (!course) {
+        //         throw new Error(`Course with ID ${courseId} not found`);
+        //     }
+
+        //     const student = await Student.findByPk(studentId);
+        //     if (!student) {
+        //         throw new Error(`Student with ID ${studentId} not found`);
+        //     }
+
+        //     await (course as any).addStudent(student);
+
+        // },
+
         async gettingStudentScheduleBetweenDates(studentId, startDate, endDate) {
-            const student = await Student.findByPk(studentId,{
+            const student = await Student.findByPk(studentId, {
                 attributes: ['Name', 'Id'],
                 include: [{
                     model: Course,
@@ -156,7 +173,7 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                         StartingDate: { [Op.gte]: startDate },
                         EndDate: { [Op.lte]: endDate },
                     },
-                    attributes: ['CourseName','Id'],
+                    attributes: ['CourseName', 'Id'],
                     include: [{
                         model: ClassDate,
                         attributes: ['StartHour', 'EndHour', 'RoomId', 'EntryInSyllabus'],
