@@ -116,6 +116,16 @@ export function createCourseRoute(db: DB) {
         res.json(course);
         console.log(course);
     })
+    courseRouter.put('/edit-course/:courseId', async (req: Request, res: Response) => {
+        const { courseId } = req.params;
+        const course = await db.Course.updateCourseById(courseId, req.body);
+        if (!course) {
+            res.status(400).json({ error: 'Invalid course data' });
+        }
+        else {
+            res.status(200).json(course);
+        }
+    });
     courseRouter.put('/:courseId', async (req: Request, res: Response) => {
         const { courseId } = req.params;
         const course = await db.Course.addLectureDataEntryToCourse(courseId, req.body);

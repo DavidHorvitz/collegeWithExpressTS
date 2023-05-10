@@ -110,15 +110,15 @@ Accept-Language: en-us
 
 ###
 
- POST  http://localhost:8080/lecturer/ HTTP/1.1 
+ POST  http://localhost:8080/lecturer/add-lecturer HTTP/1.1 
  Content-Type: application/json
  Accept-Language: en-us
 
 
  {
-   "Name":"moshe",
-   "Email":"akyd@ami.org.il",
-   "PhoneNumber":"0644847465"
+   "Name":"David",
+   "Email":"doeoeeje@ami.gmail.il",
+   "PhoneNumber":"0485968576"
  }
  ###
 

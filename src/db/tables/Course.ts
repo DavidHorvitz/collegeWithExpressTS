@@ -15,6 +15,7 @@ export interface CourseInterface {
     getAllCourses: () => Promise<AppModel.Course.Course[] | undefined>
     searchByIdWithDetails: (id: string, details: string) => Promise<AppModel.Course.Course | undefined>
     searchByName: (course_name: string) => Promise<AppModel.Course.Course | undefined>
+    updateCourseById: (courseId: string, updates: Partial<AppModel.Course.Course>) => Promise<AppModel.Course.Course | undefined>
     updateCourseByName: (course_name: string, updates: Partial<AppModel.Course.Course>) => Promise<AppModel.Course.Course | undefined>
     getLecturerWithCurrentCourses: (lecturerId: string) => Promise<string>
     getLecturerWithBetweenDates: (lecturerId: string, startDate: Date, endDate: Date) => Promise<string | undefined>
@@ -118,6 +119,25 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
 
             }
 
+        },
+        async updateCourseById(courseId: string, updates: Partial<AppModel.Course.Course>) {
+            try {
+                const [rowsAffected, [updatedStudent]] = await CourseSchema.update(updates, {
+                    where: {
+                        Id: courseId,
+                    },
+                    returning: true, // Return the updated record
+                    //   plain: true, // Return only the updated record (without metadata)
+                });
+                if (rowsAffected > 0) {
+                    return updatedStudent.toJSON() as any
+                } else {
+                    return undefined;
+                }
+            } catch (error) {
+                console.error(error);
+                return undefined;
+            }
         },
 
         async searchByName(course_name: string) {

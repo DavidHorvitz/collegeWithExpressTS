@@ -9,8 +9,11 @@ export interface LecturerInterface {
     insert: (lecturer: Omit<AppModel.Lecturer.Lecturer, "Id">) => Promise<AppModel.Lecturer.Lecturer>
     searchById: (id: string) => Promise<AppModel.Lecturer.Lecturer | undefined>
     delete: (lecturerId: string) => Promise<boolean>
-  
- 
+    updateLecturerById: (lecturerId: string, updates: Partial<AppModel.Lecturer.Lecturer>) => Promise<AppModel.Lecturer.Lecturer | undefined>
+    getAllLecturers: () => Promise<AppModel.Lecturer.Lecturer[] | undefined>
+
+
+
 
 }
 
@@ -57,7 +60,39 @@ export async function createLecturerTable(sequelize: Sequelize): Promise<Lecture
                 }
             })
             return result === 1;
-        }
-       
+        },
+        async getAllLecturers(): Promise<AppModel.Lecturer.Lecturer[] | undefined> {
+            const results = await LecturerSchema.findAll();
+            if (results.length === 0) {
+                return undefined;
+            }
+            const lectures: AppModel.Lecturer.Lecturer[] = results.map((result: any) => ({
+                Id: result.Id,
+                Name: result.Name,
+                PhoneNumber: result.PhoneNumber,
+                Email: result.Email,
+            }));
+            return lectures;
+        },
+        async updateLecturerById(lecturerId: string, updates: Partial<AppModel.Lecturer.Lecturer>) {
+            try {
+                const [rowsAffected, [updatedStudent]] = await LecturerSchema.update(updates, {
+                    where: {
+                        Id: lecturerId,
+                    },
+                    returning: true, // Return the updated record
+                    //   plain: true, // Return only the updated record (without metadata)
+                });
+                if (rowsAffected > 0) {
+                    return updatedStudent.toJSON() as any
+                } else {
+                    return undefined;
+                }
+            } catch (error) {
+                console.error(error);
+                return undefined;
+            }
+        },
+
     };
 }

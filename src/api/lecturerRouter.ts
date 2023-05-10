@@ -3,9 +3,9 @@ import { isUUID, validateLecturer } from "./validation"
 import { DB } from "../db"
 
 export function createLecturerRoute(db: DB) {
-    const router = express.Router();
-//This API gets the current courses for a specific lecturer by Id
-    router.get('/:lecturerId/course/current', async (req: Request, res: Response) => {
+    const lecturerRouter = express.Router();
+    //This API gets the current courses for a specific lecturer by Id
+    lecturerRouter.get('/:lecturerId/course/current', async (req: Request, res: Response) => {
         const { lecturerId } = req.params;
 
         if (!isUUID(lecturerId)) {
@@ -22,8 +22,8 @@ export function createLecturerRoute(db: DB) {
         console.log(lecturer);
 
     });
-//This API gets a courses between dates for a specific lecturer by Id
-    router.get('/:lecturerId/course/betweenDates', async (req: Request, res: Response) => {
+    //This API gets a courses between dates for a specific lecturer by Id
+    lecturerRouter.get('/:lecturerId/course/betweenDates', async (req: Request, res: Response) => {
         const { lecturerId } = req.params;
         const { startDate, endDate } = req.query;
 
@@ -45,7 +45,7 @@ export function createLecturerRoute(db: DB) {
 
     });
     //This API gets a schedule for a specific lecturer by ID between certain dates
-    router.get('/:lecturerId/schedule', async (req: Request, res: Response) => {
+    lecturerRouter.get('/:lecturerId/schedule', async (req: Request, res: Response) => {
         const { lecturerId } = req.params;
         const { startDate, endDate } = req.query;
 
@@ -67,8 +67,8 @@ export function createLecturerRoute(db: DB) {
 
     });
     //This API insert a nwe lecturer to the Database
-    router.post("/", async (req, res) => {
-        try {``
+    lecturerRouter.post("/add-lecturer", async (req, res) => {
+        try {
             const lecturer = validateLecturer(req.body)
             const result = await db.Lecturer.insert(lecturer);
             res.status(201).json({ status: "created", data: result })
@@ -77,12 +77,12 @@ export function createLecturerRoute(db: DB) {
             res.status(400).json({ status: "invalid input" })
         }
     })
-//This API associates the course with the lecturer
-    router.post('/:lecturerId/course/:courseId', async (req: Request, res: Response) => {
+    //This API associates the course with the lecturer
+    lecturerRouter.post('/:lecturerId/course/:courseId', async (req: Request, res: Response) => {
         const { courseId, lecturerId } = req.params;
 
         if (!isUUID(courseId)) {
-            return res.status(400).json({ error: 'Invalid courseId parameter'  });
+            return res.status(400).json({ error: 'Invalid courseId parameter' });
         }
         if (!isUUID(lecturerId)) {
             return res.status(400).json({ error: 'Invalid lecturerId parameter' });
@@ -99,8 +99,8 @@ export function createLecturerRoute(db: DB) {
     });
 
 
-//This API delete a lecturer from the database
-    router.delete("/:lecturerId", async (req, res) => {
+    //This API delete a lecturer from the database
+    lecturerRouter.delete("/delete-lecturer/:lecturerId", async (req, res) => {
         try {
             const lecturerId = isUUID(req.params.lecturerId)
             const success = await db.Lecturer.delete(lecturerId.toString());
@@ -113,6 +113,25 @@ export function createLecturerRoute(db: DB) {
             res.status(400).json({ status: "invalid input" })
         }
     })
+    //get all leturers
+    lecturerRouter.get('/', async (req: Request, res: Response) => {
+        const lecturer = await db.Lecturer.getAllLecturers();
+        if (!lecturer) {
+            res.status(404).json({ status: "Not Found some lecturer !" })
+        }
+        res.status(200).json(lecturer)
+    })
+    //Update lecturer by ID
+    lecturerRouter.put('/edit-lecturer/:lecturerId', async (req: Request, res: Response) => {
+        const { lecturerId } = req.params;
+        const lecturer = await db.Lecturer.updateLecturerById(lecturerId, req.body);
+        if (!lecturer) {
+            res.status(400).json({ error: 'Invalid lecturer data' });
+        }
+        else {
+            res.status(200).json(lecturer);
+        }
+    });
 
-    return router;
+    return lecturerRouter;
 }
