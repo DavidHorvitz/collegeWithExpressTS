@@ -5,6 +5,7 @@ import { createStudentRoute } from './studentRouter';
 import { createClassDateRoute } from "./classDateRouter";
 import { createSyllabusRoute } from "./syllabusRouter";
 import { createRoomRoute } from "./roomRouter";
+import { createWebMasterRoute } from "./webmasterRouter";
 import { initDB } from "../db"
 import cors from 'cors';
 
@@ -15,7 +16,8 @@ export async function createServer() {
     const studentRouter = createStudentRoute(db);
     const syllabusRouter = createSyllabusRoute(db);
     const class_DateRouter = createClassDateRoute(db);
-    const roomRouter = createRoomRoute(db)
+    const roomRouter = createRoomRoute(db);
+    const webmaster = createWebMasterRoute(db);
 
 
     const app = express();
@@ -27,6 +29,7 @@ export async function createServer() {
     app.use("/classDate", class_DateRouter);
     app.use("/syllabus", syllabusRouter);
     app.use("/room",roomRouter);
+    app.use("/webmaster", webmaster);
 
 
     app.listen(8080, () => {

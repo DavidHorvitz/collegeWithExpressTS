@@ -7,6 +7,7 @@ import { SyllabusInterface, createSyllabusTable } from "./Syllabus";
 import { StudentInterface, createStudentTable } from "./Student";
 import { CourseStudentInterface, createCourseStudentTable } from "./CourseStudent";
 import { RoomInterface, createRoomTable } from "./Room";
+import { WebmasterInterface, createWebmasterTable } from "./Webmaster";
 
 
 export async function initTables(connection: Sequelize) {
@@ -17,6 +18,7 @@ export async function initTables(connection: Sequelize) {
     const syllabus = await createSyllabusTable(connection, course.Schema);
     const classDate = await createClassDateTable(connection, course.Schema, lecturer.Schema, syllabus.Schema, room.Schema);
     const courseStudent = await createCourseStudentTable(connection, student.Schema, course.Schema, classDate.Schema);
+    const webmaster = await createWebmasterTable(connection);
 
 
     return {
@@ -26,7 +28,8 @@ export async function initTables(connection: Sequelize) {
         ClassDate: classDate,
         Syllabus: syllabus,
         Student: student,
-        CourseStudent: courseStudent
+        CourseStudent: courseStudent,
+        Webmaster: webmaster
     }
 }
 
@@ -37,5 +40,6 @@ export type DB = {
     ClassDate: ClassDateInterface,
     Syllabus: SyllabusInterface,
     Student: StudentInterface,
-    CourseStudent: CourseStudentInterface
+    CourseStudent: CourseStudentInterface,
+    Webmaster: WebmasterInterface
 }
