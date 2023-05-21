@@ -68,13 +68,12 @@ export function createLecturerRoute(db: DB) {
     });
     //This API insert a nwe lecturer to the Database
     lecturerRouter.post("/add-lecturer", async (req, res) => {
-        try {
-            const lecturer = validateLecturer(req.body)
-            const result = await db.Lecturer.insert(lecturer);
-            res.status(201).json({ status: "created", data: result })
+        const lecturer = await db.Lecturer.insert(req.body);
+        if (!lecturer) {
+            res.status(400).json({ status: "invalid lecturer data" })
         }
-        catch (e) {
-            res.status(400).json({ status: "invalid input" })
+        else {
+            res.status(201).json(lecturer)
         }
     })
     //This API associates the course with the lecturer
@@ -100,20 +99,20 @@ export function createLecturerRoute(db: DB) {
 
 
     //This API delete a lecturer from the database
-    lecturerRouter.delete("/delete-lecturer/:lecturerId", async (req, res) => {
-        try {
-            const lecturerId = isUUID(req.params.lecturerId)
-            const success = await db.Lecturer.delete(lecturerId.toString());
-            if (success) {
-                res.status(200).json({ status: "deleted" })
-            } else {
-                res.status(404).json({ status: "not found" })
-            }
-        } catch (e) {
-            res.status(400).json({ status: "invalid input" })
+    lecturerRouter.delete("/delete-lecturer/:lecturerId", async (req: Request, res: Response) => {
+        const { lecturerId } = req.params;
+        // check if lecturerId is a valid UUID
+        if (!isUUID(lecturerId)) {
+            return res.status(400).json({ error: 'Invalid lecturerId parameter' });
+        }
+        const lecturer = await db.Lecturer.delete(lecturerId);
+        if (lecturer) {
+            return res.status(200).json({ status: 'deleted' });
+        } else {
+            return res.status(404).json({ status: 'not found' });
         }
     })
-    //get all leturers
+    //get all lecturers
     lecturerRouter.get('/', async (req: Request, res: Response) => {
         const lecturer = await db.Lecturer.getAllLecturers();
         if (!lecturer) {

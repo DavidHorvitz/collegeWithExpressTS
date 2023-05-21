@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node ./src/main.ts",
     "run-mainRouter": "ts-node src/routers/mainRouter.ts",
-    "dev": "nodemon"
+    "run-mail":"ts-node ./src/emailNotifications/emailNotifications.ts",
+    "dev": "nodemon "
   },
   "repository": {
     "type": "git",
@@ -20,10 +21,13 @@
   },
   "homepage": "https://github.com/DavidHorvitz/collegeWithExpressTS#readme",
   "dependencies": {
+    "@types/nodemailer": "^6.4.7",
     "@types/sequelize": "^4.28.14",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "googleapis": "^118.0.0",
+    "nodemailer": "^6.9.2",
     "pg": "^8.9.0",
     "sequelize": "^6.28.0",
     "uuid-validate": "^0.0.3"

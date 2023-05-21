@@ -29,7 +29,6 @@ export function createStudentRoute(db: DB) {
         else {
             res.status(200).json(student);
         }
-        // console.log(student);
     })
 
     //GET student with him courses with data checked
