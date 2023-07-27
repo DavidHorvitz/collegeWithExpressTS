@@ -35,6 +35,10 @@ export async function createLecturerTable(sequelize: Sequelize): Promise<Lecture
         Email: {
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        ImageProfile: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
     }, {
         schema: "college",
@@ -71,6 +75,7 @@ export async function createLecturerTable(sequelize: Sequelize): Promise<Lecture
                 Name: result.Name,
                 PhoneNumber: result.PhoneNumber,
                 Email: result.Email,
+                ImageProfile: result.ImageProfile
             }));
             return lectures;
         },

@@ -4,4 +4,5 @@ export interface Lecturer {
     Name: string;
     Email: string;
     PhoneNumber: string;
+    ImageProfile: string;
 }
