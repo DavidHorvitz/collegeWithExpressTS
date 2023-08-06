@@ -15,6 +15,7 @@ export interface CourseInterface {
     getAllCourses: () => Promise<AppModel.Course.Course[] | undefined>
     searchByIdWithDetails: (id: string, details: string) => Promise<AppModel.Course.Course | undefined>
     searchByName: (course_name: string) => Promise<AppModel.Course.Course | undefined>
+    getCourseById: (courseId: string) => Promise<AppModel.Course.Course | undefined>
     updateCourseById: (courseId: string, updates: Partial<AppModel.Course.Course>) => Promise<AppModel.Course.Course | undefined>
     updateCourseByName: (course_name: string, updates: Partial<AppModel.Course.Course>) => Promise<AppModel.Course.Course | undefined>
     getLecturerWithCurrentCourses: (lecturerId: string) => Promise<string>
@@ -144,6 +145,10 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
             const result = await CourseSchema.findOne({
                 where: { CourseName: course_name }
             })
+            return result?.toJSON();
+        },
+        async getCourseById(courseId: string) {
+            const result = await CourseSchema.findByPk(courseId)
             return result?.toJSON();
         },
         async updateCourseByName(course_name: string, updates: Partial<AppModel.Course.Course>) {

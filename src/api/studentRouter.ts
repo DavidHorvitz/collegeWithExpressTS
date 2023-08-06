@@ -80,7 +80,7 @@ export function createStudentRoute(db: DB) {
             res.status(404).json({ status: 'not found' });
         }
         else {
-            res.status(200).json({ status: 'get student with his courses history succeeded !' });
+            res.status(200).json(student );
         }
         console.log(student);
 

@@ -127,7 +127,10 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                 ]
             });
             if (!result) {
-                throw new Error(' not found student or course');
+                // throw new Error(' not found student or course');
+                const result = await Student.findByPk(studentId);
+               return result?.toJSON();
+                // return undefined;
             }
             const data: any = result.toJSON();
             return data;

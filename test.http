@@ -1,11 +1,11 @@
  
-GET http://localhost:8080/student/13f65552-470e-402b-9e74-24204d29911a/course/ HTTP/1.1
+GET http://localhost:8080/student/ef3e563b-a60e-49f6-afd5-07345b4e165d/course HTTP/1.1
     'Content-Type': 'application/json',
     'Accept': 'application/json'
     ###
 
 ###
-GET http://localhost:8080/student/13f65552-470e-402b-9e74-24204d29911a/course/history HTTP/1.1
+GET http://localhost:8080/student/5eda456c-6100-4616-9b70-d9449d99389e/course/history HTTP/1.1
     'Content-Type': 'application/json',
     'Accept': 'application/json'
 ###
@@ -31,7 +31,7 @@ GET http://localhost:8080/course/adb09d5a-6af6-418f-a592-360fbe950722/student/ H
     'Accept': 'application/json'
   
 ###
-POST http://localhost:8080/course/6b4d54b0-4809-4629-8d7a-a9add626353c/student/ace3be01-b99a-4c3a-b5fc-8a3a875630aa HTTP/1.1
+POST http://localhost:8080/course/fbdc2516-839f-48d4-9f3f-947933af202e/student/98bdafc0-26c1-4978-86fb-cca262005cbd HTTP/1.1
 ###
 POST http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/4b133dde-09e3-4a6d-a682-ac6910cc96d9 HTTP/1.1
 ###
@@ -91,7 +91,7 @@ Accept-Language: en-us
 #  }
 
 ###
- POST  http://localhost:8080/student/ HTTP/1.1 
+ POST  http://localhost:8080/student/add-student HTTP/1.1 
  Content-Type: application/json
  Accept-Language: en-us
 
@@ -138,7 +138,7 @@ Accept-Language: en-us
 
 ###
 
- POST  http://localhost:8080/course/ HTTP/1.1 
+ POST  http://localhost:8080/course/add-course HTTP/1.1 
 Content-Type: application/json
 Accept-Language: en-us
 
