@@ -23,6 +23,7 @@ export interface CourseInterface {
     addCourseToLecturer: (lecturerId: string, courseId: string) => Promise<void | undefined>
     addLectureDataEntryToCourse: (courseId: string, updates: Pick<Course, "StartingDate" | "EndDate">) => Promise<AppModel.Course.Course | undefined>
     deleteLectureDataEntryFromCourse: (courseId: string, updates: Pick<Course, "StartingDate" | "EndDate">) => Promise<AppModel.Course.Course | undefined>
+    countCourses: () => Promise<number>;
 
 }
 
@@ -53,12 +54,16 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
             type: DataTypes.INTEGER,
             allowNull: true
         },
+        Image: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         IsReady: {
             type: DataTypes.BOOLEAN,
             allowNull: true
         }
     }, {
-        schema: "college",
+        schema: "college1",
         createdAt: false,
     })
     Lecturer.hasMany(CourseSchema, { foreignKey: 'LecturerId' });
@@ -68,7 +73,8 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
     return {
         Schema: CourseSchema,
         async insert(course) {
-            const result = await CourseSchema.create(course as Course)
+            const result = await CourseSchema.create(course as AppModel.Course.Course)
+            // const result = await CourseSchema.create(course as Course)
             return result.toJSON();
         },
         async delete(courseId) {
@@ -92,10 +98,24 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
                 EndDate: result.EndDate,
                 MinimumPassingScore: result.MinimumPassingScore,
                 MaximumStudents: result.MaximumStudents,
+                Image: result.Image,
                 IsReady: result.IsReady
             }));
             return courses;
         },
+        // New method to count all rows in the "courses" table
+        async countCourses() {
+            try {
+                const [result]:any = await sequelize.query('SELECT COUNT(*) FROM "college1"."Courses"');
+                const count = parseInt(result[0].count, 10);
+                return count;
+            } catch (error) {
+                console.error(error);
+                return 0; // Return 0 in case of an error
+            }
+        },
+
+
         async searchByIdWithDetails(id: string, details: string | undefined) {
             const result = await CourseSchema.findByPk(id);
 
@@ -122,6 +142,9 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
 
         },
         async updateCourseById(courseId: string, updates: Partial<AppModel.Course.Course>) {
+            // console.log(updates);
+            console.error(updates);
+
             try {
                 const [rowsAffected, [updatedStudent]] = await CourseSchema.update(updates, {
                     where: {
@@ -234,11 +257,12 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
                 where: {
                     Id: lecturerId,
                 },
-                attributes: ['Name', 'Id'],
+                attributes: ['Name', 'Id',],
                 include: [
                     {
                         model: CourseSchema,
-                        attributes: ['CourseName'],
+                        //     attributes: ['CourseName','StartingDate','EndDate',
+                        // ''],
 
                         where: {
                             EndDate: { [Op.gte]: today },
@@ -276,5 +300,6 @@ export async function createCourseTable(sequelize: Sequelize, Lecturer: Lecturer
             const data: any = result.toJSON();
             return data;
         },
+
     }
 }

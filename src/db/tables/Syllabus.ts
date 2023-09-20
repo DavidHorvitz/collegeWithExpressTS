@@ -11,6 +11,10 @@ export interface SyllabusInterface {
     delete: (syllabus: string) => Promise<boolean>
     addSyllabusToCourse: (syllabusId: string, courseId: string) => Promise<void | undefined>
     deleteSyllabusFromCourse: (syllabusId: string, courseId: string) => Promise<void | undefined>
+    getAllSyllabuses: () => Promise<AppModel.Course.Syllabus[] | undefined>
+    countSyllabuses: () => Promise<number>;
+
+
 
 }
 
@@ -32,9 +36,14 @@ export async function createSyllabusTable(sequelize: Sequelize, Course: CourseIn
         References: {
             type: DataTypes.TEXT,
             allowNull: false
-        }
+        },
+        CourseOutline: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        
     }, {
-        schema: "college",
+        schema: "college1",
         createdAt: false,
     })
     Course.hasMany(SyllabusSchema, { foreignKey: 'Course_id' });
@@ -55,6 +64,29 @@ export async function createSyllabusTable(sequelize: Sequelize, Course: CourseIn
                 }
             })
             return result === 1;
+        },
+        async getAllSyllabuses(): Promise<AppModel.Course.Syllabus[] | undefined> {
+            const results = await SyllabusSchema.findAll();
+            if (results.length === 0) {
+                return undefined;
+            }
+            const syllabuses: AppModel.Course.Syllabus[] = results.map((result: any) => ({
+                Id: result.Id,
+                Title: result.Title,
+                Description: result.Description,
+                References: result.References,
+                CourseOutline:result.CourseOutline
+            }));
+            return syllabuses;
+        },
+        async countSyllabuses() {
+            try {
+                const count = await SyllabusSchema.count();
+                return count;
+            } catch (error) {
+                console.error(error);
+                return 0; // Return 0 in case of an error
+            }
         },
         async addSyllabusToCourse(syllabusId: string, courseId: string) {
 

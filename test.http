@@ -1,14 +1,17 @@
  
-GET http://localhost:8080/student/ef3e563b-a60e-49f6-afd5-07345b4e165d/course HTTP/1.1
+
+GET http://localhost:8080/room/ HTTP/1.1
     'Content-Type': 'application/json',
     'Accept': 'application/json'
     ###
 
 ###
-GET http://localhost:8080/student/5eda456c-6100-4616-9b70-d9449d99389e/course/history HTTP/1.1
+GET http://localhost:8080/student/9aa81971-6cfa-46ae-8b0f-6289a43dc968/course/history HTTP/1.1
     'Content-Type': 'application/json',
     'Accept': 'application/json'
 ###
+
+ ###
 GET http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/current HTTP/1.1
     'Content-Type': 'application/json',
     'Accept': 'application/json'
@@ -31,7 +34,7 @@ GET http://localhost:8080/course/adb09d5a-6af6-418f-a592-360fbe950722/student/ H
     'Accept': 'application/json'
   
 ###
-POST http://localhost:8080/course/fbdc2516-839f-48d4-9f3f-947933af202e/student/98bdafc0-26c1-4978-86fb-cca262005cbd HTTP/1.1
+POST http://localhost:8080/course/add-student-to-course/6f2bed2f-be89-4a2e-afa3-80e64d047a26/student/9aa81971-6cfa-46ae-8b0f-6289a43dc968 HTTP/1.1
 ###
 POST http://localhost:8080/lecturer/48d2b743-536e-4499-abca-613deb64e4a3/course/4b133dde-09e3-4a6d-a682-ac6910cc96d9 HTTP/1.1
 ###
@@ -70,14 +73,29 @@ Accept-Language: en-us
 ###
 
 ###
-PUT http://localhost:8080/course/d12f8cdf-2eef-46f5-8f4c-36e3a8d85d99/lecture-delete-data HTTP/1.1
+PUT http://localhost:8080/course/edit-course/ecfdb493-84e2-4bf8-a9aa-e9e28baf7c91 HTTP/1.1
 Content-Type: application/json
 Accept-Language: en-us
 
-{
-  "StartingDate": null,
-  "EndDate": null
-}
+ {
+    "CourseName":"Its",
+    "StartingDate": "2023-05-01",
+    "EndDate": "2024-04-01",
+    "MinimumPassingScore" :11,
+     "MaximumStudents": 30,
+    "IsReady":false
+ }
+
+ ###
+
+
+
+
+
+# {
+  # "StartingDate": null,
+  # "EndDate": null
+# }
 
 ###
 
@@ -108,9 +126,10 @@ Accept-Language: en-us
 
 
  {
-   "Name":"LOG3",
+   "Name":"David",
    "PhoneNumber":"01134343434",
-   "Email":"malid@ami.org.il",
+   "Email":"David@ami.org.il",
+   "ImageProfile":"file:///C:/Users/User/Downloads/Profile%20picture%20of%20a%20programmer%20working%20on%20the%20laptop%20on%20the%20beach.png",
    "Password":"0522412371"
  }
  ###
@@ -122,25 +141,16 @@ Accept-Language: en-us
 
 ###
 
- POST  http://localhost:8080/lecturer/add-lecturer HTTP/1.1 
- Content-Type: application/json
- Accept-Language: en-us
 
-
- {
-   "Name":"David",
-   "Email":"doeoeeje@ami.gmail.il",
-   "PhoneNumber":"0485968576"
- }
  ###
 
 
 
 ###
 
- POST  http://localhost:8080/course/add-course HTTP/1.1 
-Content-Type: application/json
-Accept-Language: en-us
+#  POST  http://localhost:8080/course/add-course HTTP/1.1 
+# Content-Type: application/json
+# Accept-Language: en-us
 
 
 #  {
@@ -150,14 +160,14 @@ Accept-Language: en-us
 #     "IsReady":true
 #  }
 
- {
-    "CourseName":"oop",
-    "StartingDate": "2023-05-01",
-    "EndDate": "2024-04-01",
-    "MinimumPassingScore" :11,
-     "MaximumStudents": 30,
-    "IsReady":false
- }
+#  {
+#     "CourseName":"oop",
+#     "StartingDate": "2023-05-01",
+#     "EndDate": "2024-04-01",
+#     "MinimumPassingScore" :11,
+#      "MaximumStudents": 30,
+#     "IsReady":false
+#  }
 
 ###
 
@@ -172,7 +182,6 @@ Accept-Language: en-us
  Content-Type: application/json
  Accept-Language: en-us
 
-
  {
    "StartHour":"07:00:00",
    "EndHour":"09:00:00",
@@ -182,47 +191,5 @@ Accept-Language: en-us
 ###
 
 
- POST  http://localhost:8080/room HTTP/1.1 
- Content-Type: application/json
- Accept-Language: en-us
 
-
- {
-
-  "ClassNumber":1,
-
- }
-
-
-
-
- ###
-#  POST  http://localhost:8080/syllabus/ HTTP/1.1 
-#  Content-Type: application/json
-#  Accept-Language: en-us
-
-
-#  {
-
-#    "Title":"Recently posted",
-#    "Description":"C:sersserocumentsitHuollegeWithExpressTSode_modulesraw-bodydex.js:231:16)<br> &nbsp; &nbsp;at done (C:sersocumentollegeWithExpressTSnode_modulesraw-bodyndex.js:220:7)<br> &nbsp; &nbsp;at IncomingMessage.onEnd ",
-#    "References":"https://www.iconarchive.com/"
-
-#  }
- ###
-
-###
-
-
-
- GET  http://localhost:8080/student HTTP/1.1 
-###
-
-
-# Content-Type: application/json
-# Accept-Language: en-us
-
-
-# {
-#    "Course_name" :"david",
-# }
+9aa81971-6cfa-46ae-8b0f-6289a43dc968

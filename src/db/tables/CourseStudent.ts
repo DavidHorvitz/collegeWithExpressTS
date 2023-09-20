@@ -12,8 +12,9 @@ export interface CourseStudentInterface {
     getCourseWithHimStudents: (courseId: string) => Promise<string>
     getStudentWithHimCurrentCourses: (studentId: string) => Promise<string>
     getStudentWithHimHistoryCourses: (studentId: string) => Promise<string>
+    getStudentWithHimCourses: (studentId: string) => Promise<string>
     getStudentWithHimCoursesWhereTimeBetween: (studentId: string) => Promise<string>
-    addStudentToCourse: (studentId: string, courseId: string) => Promise<void | undefined>
+    addStudentToCourse: (courseId: string, studentId: string) => Promise<void | undefined>
     gettingStudentScheduleBetweenDates: (studentId: string, startingDate: Date, endDate: Date) => Promise<any | undefined>
     // gettingStudentScheduleBetweenDates: (studentId: string, startingDate: Date, endDate: Date) => Promise<AppModel.Student.Student | undefined>
 
@@ -28,7 +29,7 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
     const Course_StudentSchema = sequelize.define<CourseStudentModelSchemaModel>('Course_Student', {
 
     } as AppModel.CourseStudent.course_student, {
-        schema: "college",
+        schema: "college1",
         createdAt: false
 
     });
@@ -42,7 +43,7 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                 where: {
                     Id: courseId,
                 },
-                attributes: ['CourseName', 'StartingDate', 'EndDate'],
+                attributes: ['CourseName', 'StartingDate', 'EndDate', 'Image'],
                 include: [
                     {
                         model: Student,
@@ -52,7 +53,8 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                 ]
             });
             if (!result) {
-                throw new Error('Course not found');
+                const result = await Course.findByPk(courseId);
+                return result?.toJSON();
             }
             const data: any = result.toJSON();
             return data;
@@ -119,7 +121,7 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                 include: [
                     {
                         model: Course,
-                        attributes: ['CourseName', 'StartingDate', 'EndDate'],
+                        attributes: ['CourseName', 'StartingDate', 'EndDate', 'Image'],
                         where: {
                             EndDate: { [Op.lte]: today },
                         }
@@ -127,15 +129,35 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                 ]
             });
             if (!result) {
-                // throw new Error(' not found student or course');
                 const result = await Student.findByPk(studentId);
-               return result?.toJSON();
-                // return undefined;
+                return result?.toJSON();
             }
             const data: any = result.toJSON();
             return data;
         },
-        async addStudentToCourse(studentId: string, courseId: string) {
+        async getStudentWithHimCourses(studentId) {
+            const today = new Date();
+            const result = await Student.findOne({
+                where: {
+                    Id: studentId,
+                },
+                attributes: ['Id','Name', 'PhoneNumber', 'Email','ImageProfile'],
+                include: [
+                    {
+                        model: Course,
+                        attributes: ['CourseName', 'StartingDate', 'EndDate', 'Image'],
+
+                    }
+                ]
+            });
+            if (!result) {
+                const result = await Student.findByPk(studentId);
+                return result?.toJSON();
+            }
+            const data: any = result.toJSON();
+            return data;
+        },
+        async addStudentToCourse( courseId: string,studentId: string) {
             const course = await Course.findByPk(courseId);
             if (!course) {
                 return Promise.reject(`Course with ID ${courseId} not found`);

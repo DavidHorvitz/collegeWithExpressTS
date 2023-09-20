@@ -22,6 +22,11 @@ export function createLecturerRoute(db: DB) {
         console.log(lecturer);
 
     });
+     //Get the Count of lecturer
+     lecturerRouter.get('/count/1/', async (req, res) => {
+        const countLecturer = await db.Lecturer.countLecturer();
+        res.status(200).json({ count: countLecturer });
+    });
     //This API gets a courses between dates for a specific lecturer by Id
     lecturerRouter.get('/:lecturerId/course/betweenDates', async (req: Request, res: Response) => {
         const { lecturerId } = req.params;
@@ -45,27 +50,27 @@ export function createLecturerRoute(db: DB) {
 
     });
     //This API gets a schedule for a specific lecturer by ID between certain dates
-    lecturerRouter.get('/:lecturerId/schedule', async (req: Request, res: Response) => {
-        const { lecturerId } = req.params;
-        const { startDate, endDate } = req.query;
+    // lecturerRouter.get('/:lecturerId/schedule', async (req: Request, res: Response) => {
+    //     const { lecturerId } = req.params;
+    //     const { startDate, endDate } = req.query;
 
-        const startingDateObj = startDate ? new Date(startDate.toString()) : new Date();
-        const endDateObj = endDate ? new Date(endDate.toString()) : new Date();
+    //     const startingDateObj = startDate ? new Date(startDate.toString()) : new Date();
+    //     const endDateObj = endDate ? new Date(endDate.toString()) : new Date();
 
-        if (!isUUID(lecturerId)) {
-            return res.status(400).json({ error: 'Invalid lecturerId parameter' });
-        }
+    //     if (!isUUID(lecturerId)) {
+    //         return res.status(400).json({ error: 'Invalid lecturerId parameter' });
+    //     }
 
-        const lecturerSchedule = await db.ClassDate.gettingLecturersScheduleBetweenDates(lecturerId, startingDateObj, endDateObj);
-        if (!lecturerSchedule) {
-            res.status(404).json({ status: 'not found' });
-        }
-        else {
-            res.status(200).json({ status: 'gettingLecturersSchedule function  succeeded !', lecturer: lecturerSchedule });
-        }
-        console.log(lecturerSchedule);
+    //     const lecturerSchedule = await db.ClassDate.gettingLecturersScheduleBetweenDates(lecturerId, startingDateObj, endDateObj);
+    //     if (!lecturerSchedule) {
+    //         res.status(404).json({ status: 'not found' });
+    //     }
+    //     else {
+    //         res.status(200).json({ status: 'gettingLecturersSchedule function  succeeded !', lecturer: lecturerSchedule });
+    //     }
+    //     console.log(lecturerSchedule);
 
-    });
+    // });
     //This API insert a nwe lecturer to the Database
     lecturerRouter.post("/add-lecturer", async (req, res) => {
         const lecturer = await db.Lecturer.insert(req.body);

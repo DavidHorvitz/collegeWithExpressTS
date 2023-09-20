@@ -20,6 +20,11 @@ export function createStudentRoute(db: DB) {
         }
         res.json(student)
     })
+      //Get the Count of Rooms
+      studentRouter.get('/count/1/', async (req, res) => {
+        const countStudents = await db.Student.countStudents();
+        res.status(200).json({ count: countStudents });
+    });
     //Note that I removed :studentId from the route path as it is not required for creating a new course
     studentRouter.post('/add-student', async (req: Request, res: Response) => {
         const student = await db.Student.insert(req.body);
@@ -68,14 +73,14 @@ export function createStudentRoute(db: DB) {
     });
 
     //get a student with courses history
-    studentRouter.get('/:studentId/course/history', async (req: Request, res: Response) => {
+    studentRouter.get('/:studentId/course', async (req: Request, res: Response) => {
         const { studentId } = req.params;
 
         if (!isUUID(studentId)) {
             return res.status(400).json({ error: 'Invalid courseId parameter' });
         }
 
-        const student = await db.CourseStudent.getStudentWithHimHistoryCourses(studentId);
+        const student = await db.CourseStudent.getStudentWithHimCourses(studentId);
         if (!student) {
             res.status(404).json({ status: 'not found' });
         }
@@ -109,6 +114,7 @@ export function createStudentRoute(db: DB) {
     //This Api updates the student by Id
     studentRouter.put('/edit-student/:studentId', async (req: Request, res: Response) => {
         const { studentId } = req.params;
+        console.log("req.body:", JSON.stringify(req.body));
         const student = await db.Student.updateStudentById(studentId, req.body);
         if (!student) {
             res.status(400).json({ error: 'Invalid student data' });

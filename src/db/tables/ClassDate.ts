@@ -12,13 +12,13 @@ type ClassDateSchemaModel = Model<Omit<AppModel.Course.ClassDate, 'lecturerId'>>
 export interface ClassDateInterface {
     Schema: ModelStatic<ClassDateSchemaModel>
 
-    createClassDateWithRoom: (classDate: Pick<ClassDate, "StartHour" | "EndHour" | "EntryInSyllabus" | "RoomId">) => Promise<AppModel.Course.ClassDate>
+    // createClassDateWithRoom: (classDate: Pick<ClassDate, "StartHour" | "EndHour" | "EntryInSyllabus" | "RoomId">) => Promise<AppModel.Course.ClassDate>
     insert: (classDate_id: Omit<AppModel.Course.ClassDate, "Id">) => Promise<AppModel.Course.ClassDate>
-    delete: (classDate_id: string) => Promise<boolean>
-    addClassDateToLecturer: (lecturerId: string, classDateId: string) => Promise<void>
-    addClassDateToCourse: (courseId: string, classDateId: string) => Promise<void>
-    gettingLecturersScheduleBetweenDates: (lecturerId: string, startingDate: Date, endDate: Date) => Promise<AppModel.Lecturer.Lecturer | undefined>
-    routeForSettingTheCourseToReady: (courseId: string, updates: Omit<AppModel.Course.Course, "IsReady">) => Promise<AppModel.Course.Course | undefined>
+    // delete: (classDate_id: string) => Promise<boolean>
+    // addClassDateToLecturer: (lecturerId: string, classDateId: string) => Promise<void>
+    // addClassDateToCourse: (courseId: string, classDateId: string) => Promise<void>
+    // gettingLecturersScheduleBetweenDates: (lecturerId: string, startingDate: Date, endDate: Date) => Promise<AppModel.Lecturer.Lecturer | undefined>
+    // routeForSettingTheCourseToReady: (courseId: string, updates: Omit<AppModel.Course.Course, "IsReady">) => Promise<AppModel.Course.Course | undefined>
 
 
 
@@ -45,12 +45,12 @@ export async function createClassDateTable(sequelize: Sequelize,
             type: DataTypes.STRING,
             allowNull: false,
         },
-        RoomId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-        },
+        // RoomId: {
+        //     type: DataTypes.UUID,
+        //     allowNull: false,
+        // },
     }, {
-        schema: "college",
+        schema: "college1",
         createdAt: false,
     })
 
@@ -63,34 +63,34 @@ export async function createClassDateTable(sequelize: Sequelize,
     await ClassDateSchema.sync();
     return {
         Schema: ClassDateSchema,
-        async createClassDateWithRoom(classDate): Promise<AppModel.Course.ClassDate> {
-            const transaction: Transaction = await sequelize.transaction();
-            const data: any = classDate;
-            try {
-              const roomId = data.RoomId.ClassNumber; // Extract the room id from the nested object
-              const room: any = await Room.findByPk(roomId);
-              if (!room) {
-                throw new Error(`Room with id ${roomId} not found`);
-              }
-          
-              const classDate: any = await ClassDateSchema.create(
-                {
-                  ...data,
-                  Room: room,
-                  RoomId: roomId // Set the room id directly
-                },
-                { transaction }
-              );
-          
-              await transaction.commit();
-          
-              return classDate;
-            } catch (error) {
-              await transaction.rollback();
-              throw error;
-            }
-          },
-          
+        // async createClassDateWithRoom(classDate): Promise<AppModel.Course.ClassDate> {
+        //     const transaction: Transaction = await sequelize.transaction();
+        //     const data: any = classDate;
+        //     try {
+        //       const roomId = data.RoomId.ClassNumber; // Extract the room id from the nested object
+        //       const room: any = await Room.findByPk(roomId);
+        //       if (!room) {
+        //         throw new Error(`Room with id ${roomId} not found`);
+        //       }
+
+        //       const classDate: any = await ClassDateSchema.create(
+        //         {
+        //           ...data,
+        //           Room: room,
+        //           RoomId: roomId // Set the room id directly
+        //         },
+        //         { transaction }
+        //       );
+
+        //       await transaction.commit();
+
+        //       return classDate;
+        //     } catch (error) {
+        //       await transaction.rollback();
+        //       throw error;
+        //     }
+        //   },
+
         // async createClassDateWithRoom(classDate): Promise<AppModel.Course.ClassDate> {
         //     const transaction: Transaction = await sequelize.transaction();
         //     const data: any = classDate;
@@ -120,119 +120,119 @@ export async function createClassDateTable(sequelize: Sequelize,
             const result = await ClassDateSchema.create(classDate as AppModel.Course.ClassDate)
             return result.toJSON();
         },
-        async delete(classDate_id) {
-            const result = await ClassDateSchema.destroy({
-                where: {
-                    Id: classDate_id
-                }
-            })
-            return result === 1;
-        },
-        async addClassDateToLecturer(lecturerId, classDateId) {
+        // async delete(classDate_id) {
+        //     const result = await ClassDateSchema.destroy({
+        //         where: {
+        //             Id: classDate_id
+        //         }
+        //     })
+        //     return result === 1;
+        // },
+        // async addClassDateToLecturer(lecturerId, classDateId) {
 
-            const classDate = await ClassDateSchema.findByPk(classDateId);
-            if (!classDate) {
-                throw new Error(`classDate with ID ${classDateId} not found`);
-            }
+        //     const classDate = await ClassDateSchema.findByPk(classDateId);
+        //     if (!classDate) {
+        //         throw new Error(`classDate with ID ${classDateId} not found`);
+        //     }
 
-            const lecturer = await Lecturer.findByPk(lecturerId);
-            if (!lecturer) {
-                throw new Error(`lecturer with ID ${lecturerId} not found`);
-            }
-            await (classDate as any).setLecturer(lecturer);
-        },
-        async addClassDateToCourse(courseId, classDateId) {
+        //     const lecturer = await Lecturer.findByPk(lecturerId);
+        //     if (!lecturer) {
+        //         throw new Error(`lecturer with ID ${lecturerId} not found`);
+        //     }
+        //     await (classDate as any).setLecturer(lecturer);
+        // },
+        // async addClassDateToCourse(courseId, classDateId) {
 
-            const classDate = await ClassDateSchema.findByPk(classDateId);
-            if (!classDate) {
-                throw new Error(`classDate with ID ${classDateId} not found`);
-            }
+        //     const classDate = await ClassDateSchema.findByPk(classDateId);
+        //     if (!classDate) {
+        //         throw new Error(`classDate with ID ${classDateId} not found`);
+        //     }
 
-            const course = await Course.findByPk(courseId);
-            if (!course) {
-                throw new Error(`lecturer with ID ${courseId} not found`);
-            }
-            await (classDate as any).setCourse(course);
-        },
-        async gettingLecturersScheduleBetweenDates(lecturerId, startDate, endDate) {
-            const classDate = await Lecturer.findByPk(lecturerId, {
-                attributes: ['Name'],
-                include: [
-                    {
-                        model: Course,
-                        attributes: ['CourseName'],
-                        where: {
-                            StartingDate: { [Op.gte]: startDate, },
-                            EndDate: { [Op.lte]: endDate, },
-                        },
-                        include: [
-                            {
-                                model: ClassDateSchema,
-                                attributes: ['RoomId', 'StartHour', 'EndHour', 'EntryInSyllabus'],
-                                required: true, // Add required option to only include class dates with a linked course
-                            },
-                        ],
+        //     const course = await Course.findByPk(courseId);
+        //     if (!course) {
+        //         throw new Error(`lecturer with ID ${courseId} not found`);
+        //     }
+        //     await (classDate as any).setCourse(course);
+        // },
+        // async gettingLecturersScheduleBetweenDates(lecturerId, startDate, endDate) {
+        //     const classDate = await Lecturer.findByPk(lecturerId, {
+        //         attributes: ['Name'],
+        //         include: [
+        //             {
+        //                 model: Course,
+        //                 attributes: ['CourseName'],
+        //                 where: {
+        //                     StartingDate: { [Op.gte]: startDate, },
+        //                     EndDate: { [Op.lte]: endDate, },
+        //                 },
+        //                 include: [
+        //                     {
+        //                         model: ClassDateSchema,
+        //                         attributes: ['RoomId', 'StartHour', 'EndHour', 'EntryInSyllabus'],
+        //                         required: true, // Add required option to only include class dates with a linked course
+        //                     },
+        //                 ],
 
-                    },
-                ],
-            });
-            if (!classDate) {
-                return undefined;
-            }
-            const data: any = classDate;
-            return data;
-        },
-        async routeForSettingTheCourseToReady(courseId, updates) {
-            try {
-                const result = await Course.findAll({
-                    where: { Id: courseId },
-                    include: [{
-                        model: ClassDateSchema,
-                        required: true,
-                        include: [{
-                            model: Syllabus,
-                            required: true,
-                        },
-                        {
-                            model: Lecturer,
-                            required: true,
-                        }]
-                    }]
-                })
-                if (!result) {
-                    console.log('Course not found');
-                    return undefined;
-                }
+        //             },
+        //         ],
+        //     });
+        //     if (!classDate) {
+        //         return undefined;
+        //     }
+        //     const data: any = classDate;
+        //     return data;
+        // },
+        // async routeForSettingTheCourseToReady(courseId, updates) {
+        //     try {
+        //         const result = await Course.findAll({
+        //             where: { Id: courseId },
+        //             include: [{
+        //                 model: ClassDateSchema,
+        //                 required: true,
+        //                 include: [{
+        //                     model: Syllabus,
+        //                     required: true,
+        //                 },
+        //                 {
+        //                     model: Lecturer,
+        //                     required: true,
+        //                 }]
+        //             }]
+        //         })
+        //         if (!result) {
+        //             console.log('Course not found');
+        //             return undefined;
+        //         }
 
-                const data: any = result;
-                const { CourseName, StartingDate, EndDate, MinimumPassingScore, MaximumStudents } = data;
+        //         const data: any = result;
+        //         const { CourseName, StartingDate, EndDate, MinimumPassingScore, MaximumStudents } = data;
 
-                if (!CourseName || !StartingDate || !EndDate || !MinimumPassingScore || !MaximumStudents) {
-                    return {
-                        error: "Course information is not set properly. Please set all fields."
-                    };
-                }
+        //         if (!CourseName || !StartingDate || !EndDate || !MinimumPassingScore || !MaximumStudents) {
+        //             return {
+        //                 error: "Course information is not set properly. Please set all fields."
+        //             };
+        //         }
 
-                const [rowsAffected, [updatedCourse]] = await Course.update({
-                    ...updates,
-                    IsReady: true
-                }, {
-                    where: {
-                        Id: courseId,
-                    },
-                    returning: true
-                });
+        //         const [rowsAffected, [updatedCourse]] = await Course.update({
+        //             ...updates,
+        //             IsReady: true
+        //         }, {
+        //             where: {
+        //                 Id: courseId,
+        //             },
+        //             returning: true
+        //         });
 
-                if (rowsAffected > 0) {
-                    return updatedCourse.toJSON() as any;
-                } else {
-                    return undefined;
-                }
-            } catch (error) {
-                console.error(error);
-                return undefined;
-            }
-        },
+        //         if (rowsAffected > 0) {
+        //             return updatedCourse.toJSON() as any;
+        //         } else {
+        //             return undefined;
+        //         }
+        //     } catch (error) {
+        //         console.error(error);
+        //         return undefined;
+        //     }
+        // },
 
 
     };

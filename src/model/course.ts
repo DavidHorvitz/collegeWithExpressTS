@@ -1,12 +1,13 @@
 export interface Room {
     Id: string,
-    ClassNumber: number
+    ClassNumber: number,
+    ClassDatumId?: string
 }
 export interface ClassDate {
     Id: string;
     StartHour: Date;
     EndHour: Date;
-    RoomId: Array<Room>;
+    RoomId?: Array<Room>;
     EntryInSyllabus: string;
     LecturerId?: string;
 }
@@ -16,6 +17,7 @@ export interface Syllabus {
     Title: string;
     Description: string;
     References: Array<string>
+    CourseOutline: Array<string>
 }
 
 
@@ -26,6 +28,7 @@ export interface Course {
     EndDate: Date;
     MinimumPassingScore: number;
     MaximumStudents: number;
+    Image: string;
     IsReady: boolean;
     ClassDates?: Array<ClassDate>;
     Syllabus?: Array<Syllabus>

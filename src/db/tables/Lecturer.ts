@@ -11,6 +11,7 @@ export interface LecturerInterface {
     delete: (lecturerId: string) => Promise<boolean>
     updateLecturerById: (lecturerId: string, updates: Partial<AppModel.Lecturer.Lecturer>) => Promise<AppModel.Lecturer.Lecturer | undefined>
     getAllLecturers: () => Promise<AppModel.Lecturer.Lecturer[] | undefined>
+    countLecturer: () => Promise<number>;
 
 
 
@@ -41,7 +42,7 @@ export async function createLecturerTable(sequelize: Sequelize): Promise<Lecture
             allowNull: true
         }
     }, {
-        schema: "college",
+        schema: "college1",
         createdAt: false,
     })
 
@@ -78,6 +79,16 @@ export async function createLecturerTable(sequelize: Sequelize): Promise<Lecture
                 ImageProfile: result.ImageProfile
             }));
             return lectures;
+        },
+         // New method to count all rows in the "Lecturer" table
+        async countLecturer() {
+            try {
+                const count = await LecturerSchema.count();
+                return count;
+            } catch (error) {
+                console.error(error);
+                return 0; // Return 0 in case of an error
+            }
         },
         async updateLecturerById(lecturerId: string, updates: Partial<AppModel.Lecturer.Lecturer>) {
             try {

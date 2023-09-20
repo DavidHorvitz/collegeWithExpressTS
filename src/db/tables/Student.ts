@@ -10,6 +10,7 @@ export interface StudentInterface {
     getAllStudent: () => Promise<AppModel.Student.Student[] | undefined>
     delete: (studentId: string) => Promise<boolean>
     updateStudentById: (studentId: string, updates: Partial<AppModel.Student.Student>) => Promise<AppModel.Student.Student | undefined>
+    countStudents: () => Promise<number>;
 
 }
 
@@ -31,9 +32,13 @@ export async function createStudentTable(sequelize: Sequelize): Promise<StudentI
         Email: {
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        ImageProfile: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
     }, {
-        schema: "college",
+        schema: "college1",
         createdAt: false,
     })
 
@@ -59,11 +64,20 @@ export async function createStudentTable(sequelize: Sequelize): Promise<StudentI
                 Id: result.Id,
                 Name: result.Name,
                 PhoneNumber: result.PhoneNumber,
-                Email: result.Email
+                Email: result.Email,
+                ImageProfile: result.ImageProfile
             }));
             return students;
         },
-
+        async countStudents() {
+            try {
+                const count = await StudentSchema.count();
+                return count;
+            } catch (error) {
+                console.error(error);
+                return 0; // Return 0 in case of an error
+            }
+        },
         async delete(studentId) {
             const result = await StudentSchema.destroy({
                 where: {

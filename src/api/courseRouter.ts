@@ -26,6 +26,13 @@ export function createCourseRoute(db: DB) {
         }
         res.status(200).json(course)
     })
+    //Get the Count of Courses
+    courseRouter.get('/count/1/', async (req, res) => {
+        const courseCount = await db.Course.countCourses();
+        res.status(200).json({ count: courseCount });
+    });
+    
+
     //get a course with him students 
     courseRouter.get('/:courseId/student/', async (req: Request, res: Response) => {
         const { courseId } = req.params;
@@ -39,7 +46,7 @@ export function createCourseRoute(db: DB) {
             res.status(404).json({ status: 'not found' });
         }
         else {
-            res.status(200).json({ status: 'get course with his students succeeded !', course });
+            res.status(200).json(course);
         }
         console.log(course);
 
@@ -69,7 +76,7 @@ export function createCourseRoute(db: DB) {
     })
 
     //This function adds a student to the course by adding the two PKs to the courseStudent linking table
-    courseRouter.post('/:courseId/student/:studentId', async (req: Request, res: Response) => {
+    courseRouter.post('/add-student-to-course/:courseId/student/:studentId', async (req: Request, res: Response) => {
         const { courseId, studentId } = req.params;
 
         if (!isUUID(courseId)) {
@@ -78,7 +85,7 @@ export function createCourseRoute(db: DB) {
         if (!isUUID(studentId)) {
             return res.status(400).json({ error: 'Invalid studentId parameter' });
         }
-        const course = await db.CourseStudent.addStudentToCourse(studentId, courseId);
+        const course = await db.CourseStudent.addStudentToCourse(courseId, studentId);
         if (!course) {
             res.status(404).json({ status: 'not found' });
         }
@@ -107,48 +114,56 @@ export function createCourseRoute(db: DB) {
     //Update Course (http://localhost:8080/course?course_name=React)
     //Just remember, after sending the request, you need to replace the name with
     // URL because it has already been updated
-    courseRouter.put('/', async (req: Request, res: Response) => {
-        const course_name = req.query.course_name as string;
-        const course = await db.Course.updateCourseByName(course_name, req.body);
-        if (!course) {
-            res.status(404).json({ course: "Not Found" })
-        }
-        res.json(course);
-        console.log(course);
-    })
+    // courseRouter.put('/', async (req: Request, res: Response) => {
+    //     const course_name = req.query.course_name as string;
+    //     const course = await db.Course.updateCourseByName(course_name, req.body);
+    //     if (!course) {
+    //         res.status(404).json({ course: "Not Found" })
+    //     }
+    //     res.json(course);
+    //     console.log(course);
+    // })
+
     courseRouter.put('/edit-course/:courseId', async (req: Request, res: Response) => {
         const { courseId } = req.params;
+        console.log("req.body:", JSON.stringify(req.body));
+
+        console.log("courseId: " + courseId);
+
         const course = await db.Course.updateCourseById(courseId, req.body);
+
+        console.log("course", course);
         if (!course) {
+
             res.status(400).json({ error: 'Invalid course data' });
         }
         else {
             res.status(200).json(course);
         }
     });
-    courseRouter.put('/:courseId', async (req: Request, res: Response) => {
-        const { courseId } = req.params;
-        const course = await db.Course.addLectureDataEntryToCourse(courseId, req.body);
-        if (!course) {
-            res.status(404).json({ course: "Not Found" })
-        }
-        res.status(404).json({ status: "Successes", course })
+    // courseRouter.put('/:courseId', async (req: Request, res: Response) => {
+    //     const { courseId } = req.params;
+    //     const course = await db.Course.addLectureDataEntryToCourse(courseId, req.body);
+    //     if (!course) {
+    //         res.status(404).json({ course: "Not Found" })
+    //     }
+    //     res.status(404).json({ status: "Successes", course })
 
-        console.log(course);
-    });
+    //     console.log(course);
+    // });
     //This API removing the lecture date entry for course
-    courseRouter.put('/:courseId/lecture-delete-data', async (req: Request, res: Response) => {
-        const { courseId } = req.params;
-        console.log(courseId, "test before course is deleted ROUTER");
+    // courseRouter.put('/:courseId/lecture-delete-data', async (req: Request, res: Response) => {
+    //     const { courseId } = req.params;
+    //     console.log(courseId, "test before course is deleted ROUTER");
 
-        const course = await db.Course.deleteLectureDataEntryFromCourse(courseId, req.body);
-        console.log(courseId, "test after delete ROUTER");
-        if (!course) {
-            res.status(404).json({ course: "Not Found" })
-        } else {
-            res.status(200).json(course);
-        }
-    });
+    //     const course = await db.Course.deleteLectureDataEntryFromCourse(courseId, req.body);
+    //     console.log(courseId, "test after delete ROUTER");
+    //     if (!course) {
+    //         res.status(404).json({ course: "Not Found" })
+    //     } else {
+    //         res.status(200).json(course);
+    //     }
+    // });
 
     //DELETE
     //This API is delete a course by its Id

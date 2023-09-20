@@ -4,5 +4,6 @@ export interface Webmaster {
     Name: string;
     PhoneNumber: string;
     Email: string;
+    ImageProfile: string;
     Password: string;
 }

@@ -32,12 +32,16 @@ export async function createWebmasterTable(sequelize: Sequelize): Promise<Webmas
             type: DataTypes.TEXT,
             allowNull: false
         },
+        ImageProfile: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         Password: {
             type: DataTypes.TEXT,
             allowNull: false
         }
     }, {
-        schema: "college",
+        schema: "college1",
         createdAt: false,
     })
 
@@ -64,6 +68,7 @@ export async function createWebmasterTable(sequelize: Sequelize): Promise<Webmas
                 Name: result.Name,
                 PhoneNumber: result.PhoneNumber,
                 Email: result.Email,
+                ImageProfile: result.ImageProfile,
                 Password : result.Password
             }));
             return webmasters;
