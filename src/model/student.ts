@@ -6,3 +6,4 @@ export interface Student {
     Email: string;
     ImageProfile: string;
 }
+

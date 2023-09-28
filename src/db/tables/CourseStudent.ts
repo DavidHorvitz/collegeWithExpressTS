@@ -1,8 +1,9 @@
-import { Model, ModelStatic, Sequelize } from 'sequelize';
+import { DataTypes, Model, ModelStatic, Sequelize } from 'sequelize';
 import * as AppModel from "../../model/mainModels"
 import { CourseInterface } from "./Course";
 import { StudentInterface } from './Student';
 import { ClassDateInterface } from './ClassDate';
+import { TestInterface } from './Test';
 import { Op } from 'sequelize';
 
 type CourseStudentModelSchemaModel = Model<AppModel.CourseStudent.course_student>
@@ -24,17 +25,36 @@ export interface CourseStudentInterface {
 
 export async function createCourseStudentTable(sequelize: Sequelize, Student: StudentInterface["Schema"],
     Course: CourseInterface["Schema"],
-    ClassDate: ClassDateInterface["Schema"]):
+    ClassDate: ClassDateInterface["Schema"],
+    Test: TestInterface["Schema"],
+):
     Promise<CourseStudentInterface> {
-    const Course_StudentSchema = sequelize.define<CourseStudentModelSchemaModel>('Course_Student', {
+    const Course_StudentSchema = sequelize.define<CourseStudentModelSchemaModel>(
+        'Course_Student', {
 
-    } as AppModel.CourseStudent.course_student, {
-        schema: "college1",
-        createdAt: false
+            Test_date: {
+                type: DataTypes.DATEONLY,
+                allowNull: true,
+            },
+            Score: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            TestId: {
+                type: DataTypes.UUID,
+                allowNull: true,
+            },
 
-    });
+        } as any, {
+        // } as unknown as AppModel.CourseStudent.course_student, {
+        schema: 'college1',
+        createdAt: false,
+    }
+    );
+
     Student.belongsToMany(Course, { through: Course_StudentSchema });
     Course.belongsToMany(Student, { through: Course_StudentSchema });
+  
     await Course_StudentSchema.sync();
     return {
         Schema: Course_StudentSchema,
@@ -141,7 +161,7 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
                 where: {
                     Id: studentId,
                 },
-                attributes: ['Id','Name', 'PhoneNumber', 'Email','ImageProfile'],
+                attributes: ['Id', 'Name', 'PhoneNumber', 'Email', 'ImageProfile'],
                 include: [
                     {
                         model: Course,
@@ -157,7 +177,7 @@ export async function createCourseStudentTable(sequelize: Sequelize, Student: St
             const data: any = result.toJSON();
             return data;
         },
-        async addStudentToCourse( courseId: string,studentId: string) {
+        async addStudentToCourse(courseId: string, studentId: string) {
             const course = await Course.findByPk(courseId);
             if (!course) {
                 return Promise.reject(`Course with ID ${courseId} not found`);

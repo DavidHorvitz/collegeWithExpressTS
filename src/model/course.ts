@@ -34,3 +34,9 @@ export interface Course {
     Syllabus?: Array<Syllabus>
 }
 
+export interface Test {
+    Id: string;
+    TestName: string;
+    TestNumber: number;
+
+}

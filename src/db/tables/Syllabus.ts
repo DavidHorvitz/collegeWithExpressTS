@@ -34,13 +34,21 @@ export async function createSyllabusTable(sequelize: Sequelize, Course: CourseIn
             allowNull: false
         },
         References: {
-            type: DataTypes.TEXT,
+            type: DataTypes.ARRAY(DataTypes.TEXT),
             allowNull: false
         },
+        // References: {
+        //     type: DataTypes.TEXT,
+        //     allowNull: false
+        // },
         CourseOutline: {
-            type: DataTypes.TEXT,
+            type: DataTypes.ARRAY(DataTypes.TEXT), // Change the data type to ARRAY
             allowNull: false
         },
+        // CourseOutline: {
+        //     type: DataTypes.TEXT,
+        //     allowNull: false
+        // },
         
     }, {
         schema: "college1",
